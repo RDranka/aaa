@@ -10,6 +10,7 @@ define([
         'Settings',
         'i18nStrings',
         './Dialogs',
+        './ExternalControls',
         './ReaderSettingsDialog',
         'hgn!readium_js_viewer_html_templates/about-dialog.html',
         'hgn!readium_js_viewer_html_templates/reader-navbar.html',
@@ -39,6 +40,7 @@ define([
         Settings,
         Strings,
         Dialogs,
+        ExternalControls,
         SettingsDialog,
         AboutDialog,
         ReaderNavbar,
@@ -53,8 +55,7 @@ define([
         Versioning,
         Readium,
         Helpers,
-        BookmarkData,
-        ExternalControls) {
+        BookmarkData) {
 
         // initialised in initReadium()
         var readium = undefined;
@@ -72,11 +73,6 @@ define([
         // initialised in initReadium()
         // (variable not actually used anywhere here, but top-level to indicate that its lifespan is that of the reader object (not to be garbage-collected))
         var gesturesHandler = undefined;
-
-
-        // TODO: is this variable actually used anywhere here??
-        // (bad naming convention, hard to find usages of "el")
-        var el = document.documentElement;
 
         var tooltipSelector = function () {
             return 'nav *[title], #readium-page-btns *[title]';
@@ -139,15 +135,6 @@ define([
             return ebookURL;
         };
 
-        function setBookTitle(title) {
-
-            var $titleEl = $('.book-title-header');
-            if ($titleEl.length) {
-                $titleEl.text(title);
-            } else {
-                $('<h2 class="book-title-header"></h2>').insertAfter('.navbar').text(title);
-            }
-        };
 
         var _debugBookmarkData_goto = undefined;
         var debugBookmarkData = function (cfi) {
@@ -160,17 +147,10 @@ define([
         var loadEbook = function (readerSettings, openPageRequest) {
 
             readium.openPackageDocument(ebookURL, function (packageDocument, options) {
-
                     if (!packageDocument) {
-                        ExternalControls.show("when the epub loads");
                         console.error("ERROR OPENING EBOOK: " + ebookURL_filepath);
-
                         spin(false);
-                        setBookTitle(ebookURL_filepath);
-
-                        Dialogs.showErrorWithDetails(Strings.err_epub_corrupt, ebookURL_filepath);
-                        //Dialogs.showModalMessage(Strings.err_dlg_title, ebookURL_filepath);
-
+                        ExternalControls.getInstance().epubFailed(Strings.err_epub_corrupt);
                         return;
                     }
 
@@ -180,12 +160,7 @@ define([
                     });
 
                     wasFixed = readium.reader.isCurrentViewFixedLayout();
-                    var metadata = options.metadata;
 
-                    setBookTitle(metadata.title);
-
-                    $("#left-page-btn").unbind("click");
-                    $("#right-page-btn").unbind("click");
                     var $pageBtnsContainer = $('#readium-page-btns');
                     $pageBtnsContainer.empty();
                     var rtl = currentPackageDocument.getPageProgressionDirection() === "rtl"; //_package.spine.isLeftToRight()
@@ -193,13 +168,11 @@ define([
                         strings: Strings, dialogs: Dialogs, keyboard: Keyboard,
                         pageProgressionDirectionIsRTL: rtl
                     }));
-                    $("#left-page-btn").on("click", prevPage);
-                    $("#right-page-btn").on("click", nextPage);
-                    $("#left-page-btn").mouseleave(function () {
-                        $(tooltipSelector()).tooltip('destroy');
-                    });
-                    $("#right-page-btn").mouseleave(function () {
-                        $(tooltipSelector()).tooltip('destroy');
+                    ExternalControls.getInstance().epubLoaded(options.metadata, readium.reader);
+                    ExternalControls.getInstance().registerChannel(function (message) {
+                            if(message === "BOOKMARK_CURRENT_PAGE"){
+                                savePlace();
+                            }
                     });
                 },
                 openPageRequest
@@ -385,7 +358,9 @@ define([
 
             readium.reader.on(ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START, function ($iframe, spineItem) {
                 Globals.logEvent("CONTENT_DOCUMENT_LOAD_START", "ON", "EpubReader.js [ " + spineItem.href + " ]");
-                savePlace();
+                if(ExternalControls.getInstance().isAutoBookmark()){
+                    savePlace();
+                }
             });
 
 
@@ -417,9 +392,9 @@ define([
                     _debugBookmarkData_goto = undefined;
                 }
 
-                savePlace();
-                updateUI(pageChangeData);
-
+                if(ExternalControls.getInstance().isAutoBookmark()){
+                    savePlace();
+                }
                 spin(false);
 
                 if (!_tocLinkActivated) return;
@@ -599,17 +574,7 @@ define([
             screenfull.toggle();
         }
 
-        var isChromeExtensionPackagedApp = (typeof chrome !== "undefined") && chrome.app
-            && chrome.app.window && chrome.app.window.current; // a bit redundant?
-
         if (screenfull.enabled) {
-            if (isChromeExtensionPackagedApp) {
-                screenfull.onchange = function (e) {
-                    if (chrome.app.window.current().isFullscreen()) {
-                        chrome.app.window.current().restore();
-                    }
-                };
-            }
 
             screenfull.onchange(function (e) {
                 var titleText;
@@ -690,21 +655,6 @@ define([
             }
         }
 
-        //TODO: also update "previous/next page" commands status (disabled/enabled), not just button visibility.
-        // https://github.com/readium/readium-js-viewer/issues/188
-        // See onSwipeLeft() onSwipeRight() in gesturesHandler.
-        // See nextPage() prevPage() in this class.
-        var updateUI = function (pageChangeData) {
-            if (pageChangeData.paginationInfo.canGoLeft())
-                $("#left-page-btn").show();
-            else
-                $("#left-page-btn").hide();
-            if (pageChangeData.paginationInfo.canGoRight())
-                $("#right-page-btn").show();
-            else
-                $("#right-page-btn").hide();
-        };
-
         var generateQueryParamCFI = function (bookmark) {
             if (!bookmark.idref) {
                 return;
@@ -726,12 +676,9 @@ define([
         var savePlace = function () {
 
             var bookmarkString = readium.reader.bookmarkCurrentPage();
-            // Note: automatically JSON.stringify's the passed value!
-            // ... and bookmarkCurrentPage() is already JSON.toString'ed, so that's twice!
             Settings.put(ebookURL_filepath, bookmarkString, $.noop);
 
-            if (!isChromeExtensionPackagedApp // History API is disabled in packaged apps
-                && window.history && window.history.replaceState) {
+            if (window.history && window.history.replaceState) {
 
                 var urlParams = Helpers.getURLQueryParams();
                 var ebookURL = urlParams['epub'];
@@ -759,114 +706,109 @@ define([
         };
 
         var nextPage = function () {
-
             readium.reader.openPageRight();
             return false;
         };
 
         var prevPage = function () {
-
             readium.reader.openPageLeft();
             return false;
         };
 
         var installReaderEventHandlers = function () {
 
-            if (isChromeExtensionPackagedApp) {
-                $('.icon-shareUrl').css("display", "none");
-            } else {
-                $(".icon-shareUrl").on("click", function () {
+            $(".icon-shareUrl").on("click", function () {
 
-                    var urlParams = Helpers.getURLQueryParams();
-                    var ebookURL = urlParams['epub'];
-                    if (!ebookURL) return;
+                var urlParams = Helpers.getURLQueryParams();
+                var ebookURL = urlParams['epub'];
+                if (!ebookURL) return;
 
-                    var bookmark = JSON.parse(readium.reader.bookmarkCurrentPage()) || {};
+                var bookmark = JSON.parse(readium.reader.bookmarkCurrentPage()) || {};
 
-                    // TODO: remove dependency on highlighter plugin (selection DOM range convert to BookmarkData)
-                    if (readium.reader.plugins.highlights) {
-                        var tempId = Math.floor((Math.random() * 1000000));
-                        //BookmarkData
-                        var bookmarkDataSelection = readium.reader.plugins.highlights.addSelectionHighlight(tempId, "temp-highlight");
-                        if (bookmarkDataSelection) {
-                            setTimeout(function () {
-                                readium.reader.plugins.highlights.removeHighlight(tempId);
-                            }, 500);
+                // TODO: remove dependency on highlighter plugin (selection DOM range convert to BookmarkData)
+                if (readium.reader.plugins.highlights) {
+                    var tempId = Math.floor((Math.random() * 1000000));
+                    //BookmarkData
+                    var bookmarkDataSelection = readium.reader.plugins.highlights.addSelectionHighlight(tempId, "temp-highlight");
+                    if (bookmarkDataSelection) {
+                        setTimeout(function () {
+                            readium.reader.plugins.highlights.removeHighlight(tempId);
+                        }, 500);
 
-                            console.log("Selection shared bookmark:");
-                            debugBookmarkData(bookmarkDataSelection);
-                            bookmark.contentCFI = bookmarkDataSelection.contentCFI;
-                        }
+                        console.log("Selection shared bookmark:");
+                        debugBookmarkData(bookmarkDataSelection);
+                        bookmark.contentCFI = bookmarkDataSelection.contentCFI;
                     }
+                }
 
-                    ebookURL = ensureUrlIsRelativeToApp(ebookURL);
+                ebookURL = ensureUrlIsRelativeToApp(ebookURL);
 
-                    var url = Helpers.buildUrlQueryParameters(undefined, {
-                        epub: ebookURL,
-                        epubs: " ",
-                        embedded: " ",
-                        goto: {value: generateQueryParamCFI(bookmark), verbatim: true}
-                    });
-
-                    var injectCoverImageURI = function (uri) {
-                        var style = 'margin-top: 1em; margin-bottom: 0.5em; height:400px; width:100%; background-repeat: no-repeat; background-size: contain; background-position: center; background-attachment: scroll; background-clip: content-box; background-origin: content-box; box-sizing: border-box; background-image: url(' + uri + ');';
-
-                        var $div = $("#readium_book_cover_image");
-                        if ($div && $div[0]) {
-                            $div.attr("style", style);
-                        }
-
-                        return style;
-                    };
-
-                    var ebookCoverImageURL = undefined;
-                    try {
-                        var fetcher = readium.getCurrentPublicationFetcher();
-
-                        var coverHref = currentPackageDocument.getMetadata().cover_href;
-                        if (coverHref) {
-                            var coverPath = fetcher.convertPathRelativeToPackageToRelativeToBase(coverHref);
-                            var relPath = "/" + coverPath; //  "/META-INF/container.xml"
-
-                            if (fetcher.shouldConstructDomProgrammatically()) {
-
-                                fetcher.relativeToPackageFetchFileContents(relPath, 'blob', function (res) {
-                                    if (res) {
-                                        try {
-                                            var blobURI = window.URL.createObjectURL(res);
-                                            injectCoverImageURI(blobURI);
-                                        } catch (err) {
-                                            // ignore
-                                            console.error(err);
-                                        }
-                                    }
-                                }, function (err) {
-                                    // ignore
-                                    console.error(err);
-                                });
-                            } else {
-                                ebookCoverImageURL = fetcher.getEbookURL_FilePath() + relPath;
-                            }
-                        }
-                    } catch (err) {
-                        // ignore
-                        console.error(err);
-                    }
-
-                    var styleAttr = "";
-                    if (ebookCoverImageURL) {
-                        styleAttr = ' style="' + injectCoverImageURI(ebookCoverImageURL) + '" ';
-                    }
-
-                    //showModalMessage
-                    //showErrorWithDetails
-                    Dialogs.showModalMessageEx(Strings.share_url, $('<p id="share-url-dialog-input-label">' + Strings.share_url_label + '</p><input id="share-url-dialog-input-id" aria-labelledby="share-url-dialog-input-label" type="text" value="' + url + '" readonly="readonly" style="width:100%" /><div id="readium_book_cover_image" ' + styleAttr + '> </div>'));
-
-                    setTimeout(function () {
-                        $('#share-url-dialog-input-id').focus().select();
-                    }, 500);
+                var url = Helpers.buildUrlQueryParameters(undefined, {
+                    epub: ebookURL,
+                    epubs: " ",
+                    embedded: " ",
+                    goto: {value: generateQueryParamCFI(bookmark), verbatim: true}
                 });
-            }
+
+                var injectCoverImageURI = function (uri) {
+                    var style = 'margin-top: 1em; margin-bottom: 0.5em; height:400px; width:100%; background-repeat: no-repeat; background-size: contain; background-position: center; background-attachment: scroll; background-clip: content-box; background-origin: content-box; box-sizing: border-box; background-image: url(' + uri + ');';
+
+                    var $div = $("#readium_book_cover_image");
+                    if ($div && $div[0]) {
+                        $div.attr("style", style);
+                    }
+
+                    return style;
+                };
+
+                var ebookCoverImageURL = undefined;
+                try {
+                    var fetcher = readium.getCurrentPublicationFetcher();
+
+                    var coverHref = currentPackageDocument.getMetadata().cover_href;
+                    if (coverHref) {
+                        var coverPath = fetcher.convertPathRelativeToPackageToRelativeToBase(coverHref);
+                        var relPath = "/" + coverPath; //  "/META-INF/container.xml"
+
+                        if (fetcher.shouldConstructDomProgrammatically()) {
+
+                            fetcher.relativeToPackageFetchFileContents(relPath, 'blob', function (res) {
+                                if (res) {
+                                    try {
+                                        var blobURI = window.URL.createObjectURL(res);
+                                        injectCoverImageURI(blobURI);
+                                    } catch (err) {
+                                        // ignore
+                                        console.error(err);
+                                    }
+                                }
+                            }, function (err) {
+                                // ignore
+                                console.error(err);
+                            });
+                        } else {
+                            ebookCoverImageURL = fetcher.getEbookURL_FilePath() + relPath;
+                        }
+                    }
+                } catch (err) {
+                    // ignore
+                    console.error(err);
+                }
+
+                var styleAttr = "";
+                if (ebookCoverImageURL) {
+                    styleAttr = ' style="' + injectCoverImageURI(ebookCoverImageURL) + '" ';
+                }
+
+                //showModalMessage
+                //showErrorWithDetails
+                Dialogs.showModalMessageEx(Strings.share_url, $('<p id="share-url-dialog-input-label">' + Strings.share_url_label + '</p><input id="share-url-dialog-input-id" aria-labelledby="share-url-dialog-input-label" type="text" value="' + url + '" readonly="readonly" style="width:100%" /><div id="readium_book_cover_image" ' + styleAttr + '> </div>'));
+
+                setTimeout(function () {
+                    $('#share-url-dialog-input-id').focus().select();
+                }, 500);
+            });
+
 
             // Set handlers for click events
             $(".icon-annotations").on("click", function () {
