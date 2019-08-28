@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<package version="3.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="bookid" prefix="rendition: http://www.idpf.org/vocab/rendition/# ibooks: http://vocabulary.itunes.apple.com/rdf/ibooks/vocabulary-extensions-1.0/">
+	<metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+		<meta name="generator" content="Adobe InDesign 14.0.2" />
+		<meta name="cover" content="x1.png" />
+		<meta property="ibooks:specified-fonts">true</meta>
+		<dc:title>finalepub</dc:title>
+		<dc:date>2019-08-28T19:22:29Z</dc:date>
+		<dc:language>en-US</dc:language>
+		<meta property="dcterms:modified">2019-08-28T19:22:29Z</meta>
+		<dc:identifier id="bookid">urn:uuid:7A11ECC5-5ECF-4E30-AD71-826B11C0B9C1</dc:identifier>
+		<!--fixed-layout options-->
+		<meta property="rendition:layout">pre-paginated</meta>
+		<meta property="rendition:orientation">landscape</meta>
+		<meta property="rendition:spread">both</meta>
+	</metadata>
+	<manifest>
+		<item id="abc-1" href="abc-1.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-2" href="abc-2.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-3" href="abc-3.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-4" href="abc-4.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-5" href="abc-5.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-6" href="abc-6.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-7" href="abc-7.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-8" href="abc-8.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-9" href="abc-9.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-10" href="abc-10.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-11" href="abc-11.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-12" href="abc-12.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-13" href="abc-13.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-14" href="abc-14.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-15" href="abc-15.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-16" href="abc-16.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-17" href="abc-17.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-18" href="abc-18.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-19" href="abc-19.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-20" href="abc-20.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-21" href="abc-21.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-22" href="abc-22.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-23" href="abc-23.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-24" href="abc-24.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-25" href="abc-25.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-26" href="abc-26.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-27" href="abc-27.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-28" href="abc-28.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-29" href="abc-29.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-30" href="abc-30.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-31" href="abc-31.xhtml" media-type="application/xhtml+xml" />
+		<item id="abc-32" href="abc-32.xhtml" media-type="application/xhtml+xml" />
+		<item id="toc" href="toc.xhtml" media-type="application/xhtml+xml" properties="nav" />
+		<item id="idGeneratedStyles.css" href="css/idGeneratedStyles.css" media-type="text/css" />
+		<item id="ACaslonPro-Regular.ttf" href="font/ACaslonPro-Regular.ttf" media-type="application/vnd.ms-opentype" />
+		<item id="FMAbhayax.TTF" href="font/FMAbhayax.TTF" media-type="application/x-font-ttf" />
+		<item id="PTSans-Caption.ttc" href="font/PTSans-Caption.ttc" media-type="application/x-font-ttf" />
+		<item id="x1.png" href="image/1.png" media-type="image/png" properties="cover-image" />
+		<item id="x7.png" href="image/7.png" media-type="image/png" />
+		<item id="x18.png" href="image/18.png" media-type="image/png" />
+		<item id="x36.png" href="image/36.png" media-type="image/png" />
+	</manifest>
+	<spine>
+		<itemref idref="abc-1" properties="page-spread-right" />
+		<itemref idref="abc-2" properties="page-spread-left" />
+		<itemref idref="abc-3" properties="page-spread-right" />
+		<itemref idref="abc-4" properties="page-spread-left" />
+		<itemref idref="abc-5" properties="page-spread-right" />
+		<itemref idref="abc-6" properties="page-spread-left" />
+		<itemref idref="abc-7" properties="page-spread-right" />
+		<itemref idref="abc-8" properties="page-spread-left" />
+		<itemref idref="abc-9" properties="page-spread-right" />
+		<itemref idref="abc-10" properties="page-spread-left" />
+		<itemref idref="abc-11" properties="page-spread-right" />
+		<itemref idref="abc-12" properties="page-spread-left" />
+		<itemref idref="abc-13" properties="page-spread-right" />
+		<itemref idref="abc-14" properties="page-spread-left" />
+		<itemref idref="abc-15" properties="page-spread-right" />
+		<itemref idref="abc-16" properties="page-spread-left" />
+		<itemref idref="abc-17" properties="page-spread-right" />
+		<itemref idref="abc-18" properties="page-spread-left" />
+		<itemref idref="abc-19" properties="page-spread-right" />
+		<itemref idref="abc-20" properties="page-spread-left" />
+		<itemref idref="abc-21" properties="page-spread-right" />
+		<itemref idref="abc-22" properties="page-spread-left" />
+		<itemref idref="abc-23" properties="page-spread-right" />
+		<itemref idref="abc-24" properties="page-spread-left" />
+		<itemref idref="abc-25" properties="page-spread-right" />
+		<itemref idref="abc-26" properties="page-spread-left" />
+		<itemref idref="abc-27" properties="page-spread-right" />
+		<itemref idref="abc-28" properties="page-spread-left" />
+		<itemref idref="abc-29" properties="page-spread-right" />
+		<itemref idref="abc-30" properties="page-spread-left" />
+		<itemref idref="abc-31" properties="page-spread-right" />
+		<itemref idref="abc-32" properties="page-spread-left" />
+	</spine>
+</package>
