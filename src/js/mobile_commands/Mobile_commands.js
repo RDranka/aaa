@@ -4,14 +4,47 @@ var DEVICE_TYPES = {
 };
 
 var exControls = null;
+var events = {};
 
+/**
+* this method is mostely for non mobile devices
+* */
+function registerEvent(eventName, func) {
+    events[eventName] = func;
+}
+
+/**
+ * This function get Called from the Reader when an epub file
+ * successfully loaded, we can use this to trigger mobile event
+ * **/
 function onEpubLoadSuccess(externalcontrols) {
+    if(events["onEpubLoadSuccess"]){
+        events["onEpubLoadSuccess"](externalcontrols);
+    }
     exControls = externalcontrols;
     Log.debug("epub Loaded");
 }
 
+/**
+ * This function get Called from the Reader when an epub file
+ * failed to load, we can use this to trigger mobile event
+ * **/
 function onEpubLoadFail(error) {
+    if(events["onEpubLoadFail"]){
+        events["onEpubLoadFail"](error);
+    }
     Log.debug("epub load failed");
+}
+
+/**
+ * This function get Called from the reader when the epub loaded and
+ * then the TOC is loaded, you can check @param hasToc to check
+ * whether the epub has TOC or not
+ * */
+function onTOCLoaded(hasToC) {
+    if(events["onTOCLoaded"]){
+        events["onTOCLoaded"](hasToC);
+    }
 }
 
 /**
@@ -107,6 +140,16 @@ function setAutoBookmark($boolean) {
 }
 /*------------ BOOKMARKS END ------------------------------*/
 
+
+/*--------------- TOC ----------------------------------- */
+function getTOCJson() {
+    return exControls.getTOCJson();
+}
+
+function goToPage(href) {
+    exControls.goToPage(href);
+}
+/*--------------- TOC END-------------------------------- */
 
 function Log() {
     

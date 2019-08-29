@@ -10,6 +10,7 @@ define([
         'Settings',
         'i18nStrings',
         './Dialogs',
+        './TOCJsonCreator',
         './ExternalControls',
         './ReaderSettingsDialog',
         'hgn!readium_js_viewer_html_templates/about-dialog.html',
@@ -40,6 +41,7 @@ define([
         Settings,
         Strings,
         Dialogs,
+        TOCJsonCreator,
         ExternalControls,
         SettingsDialog,
         AboutDialog,
@@ -154,6 +156,7 @@ define([
                         return;
                     }
 
+
                     currentPackageDocument = packageDocument;
                     currentPackageDocument.generateTocListDOM(function (dom) {
                         loadToc(dom)
@@ -168,11 +171,11 @@ define([
                         strings: Strings, dialogs: Dialogs, keyboard: Keyboard,
                         pageProgressionDirectionIsRTL: rtl
                     }));
-                    ExternalControls.getInstance().epubLoaded(options.metadata, readium.reader);
+                    ExternalControls.getInstance().epubLoaded(options.metadata, packageDocument, readium.reader);
                     ExternalControls.getInstance().registerChannel(function (message) {
-                            if(message === "BOOKMARK_CURRENT_PAGE"){
-                                savePlace();
-                            }
+                        if (message === "BOOKMARK_CURRENT_PAGE") {
+                            savePlace();
+                        }
                     });
                 },
                 openPageRequest
@@ -269,84 +272,11 @@ define([
             $('.zoom-wrapper').hide();
         }
 
+
         var loadToc = function (dom) {
 
-            if (dom) {
-                $('script', dom).remove();
-
-                var tocNav;
-
-                var $navs = $('nav', dom);
-                Array.prototype.every.call($navs, function (nav) {
-                    if (nav.getAttributeNS('http://www.idpf.org/2007/ops', 'type') == 'toc') {
-                        tocNav = nav;
-                        return false;
-                    }
-                    return true;
-                });
-
-                var isRTL = false;
-                var pparent = tocNav;
-
-                while (pparent && pparent.getAttributeNS) {
-                    var dir = pparent.getAttributeNS("http://www.w3.org/1999/xhtml", "dir") || pparent.getAttribute("dir");
-
-                    if (dir && dir === "rtl") {
-                        isRTL = true;
-                        break;
-                    }
-                    pparent = pparent.parentNode;
-                }
-
-                var toc = (tocNav && $(tocNav).html()) || $('body', dom).html() || $(dom).html();
-                var tocUrl = currentPackageDocument.getToc();
-
-                if (toc && toc.length) {
-                    var $toc = $(toc);
-
-                    // "iframe" elements need to be stripped out, because of potential vulnerability when loading malicious EPUBs
-                    // e.g. src="javascript:doHorribleThings(window.top)"
-                    // Note that "embed" and "object" elements with AllowScriptAccess="always" do not need to be removed,
-                    // because unlike "iframe" the @src URI does not trigger the execution of the "javascript:" statement,
-                    // and because the "data:" base64 encoding of an image/svg that contains ecmascript
-                    // automatically results in origin/domain restrictions (thereby preventing access to window.top / window.parent).
-                    // Also note that "script" elements are discarded automatically by jQuery.
-                    $('iframe', $toc).remove();
-
-                    $('#readium-toc-body').append($toc);
-
-                    if (isRTL) {
-                        $toc[0].setAttributeNS("http://www.w3.org/1999/xhtml", "dir", "rtl");
-                        $toc[0].style.direction = "rtl"; // The CSS stylesheet property does not trigger :(
-                    }
-
-                    // remove default focus from anchor elements in TOC after added to #readium-toc-body
-                    var $items = $('#readium-toc-body li >a');
-                    $items.each(function () {
-                        $(this).attr("tabindex", "-1");
-                        $(this).on("focus", function (event) {
-                            //console.log("toc item focus: " + event.target);
-                            // remove tabindex from previously focused
-                            var $prevFocus = $('#readium-toc-body a[tabindex="60"]');
-                            if ($prevFocus.length > 0 && $prevFocus[0] !== event.target) {
-                                //console.log("previous focus: " + $prevFocus[0]);
-                                $prevFocus.attr("tabindex", "-1");
-                            }
-                            // add to newly focused
-                            event.target.setAttribute("tabindex", "60");
-                        });
-                    });
-
-                }
-
-            } else {
-                var tocUrl = currentPackageDocument.getToc();
-
-                $('#readium-toc-body').append("?? " + tocUrl);
-            }
 
             var _tocLinkActivated = false;
-
             var lastIframe = undefined,
                 wasFixed;
 
@@ -358,7 +288,7 @@ define([
 
             readium.reader.on(ReadiumSDK.Events.CONTENT_DOCUMENT_LOAD_START, function ($iframe, spineItem) {
                 Globals.logEvent("CONTENT_DOCUMENT_LOAD_START", "ON", "EpubReader.js [ " + spineItem.href + " ]");
-                if(ExternalControls.getInstance().isAutoBookmark()){
+                if (ExternalControls.getInstance().isAutoBookmark()) {
                     savePlace();
                 }
             });
@@ -392,7 +322,7 @@ define([
                     _debugBookmarkData_goto = undefined;
                 }
 
-                if(ExternalControls.getInstance().isAutoBookmark()){
+                if (ExternalControls.getInstance().isAutoBookmark()) {
                     savePlace();
                 }
                 spin(false);
@@ -464,46 +394,6 @@ define([
                 }
             });
 
-            $('#readium-toc-body').on('click', 'a', function (e) {
-                try {
-                    spin(true);
-
-                    var href = $(this).attr('href');
-                    //href = tocUrl ? new URI(href).absoluteTo(tocUrl).toString() : href;
-
-                    _tocLinkActivated = true;
-
-                    readium.reader.openContentUrl(href, tocUrl, undefined);
-
-                    if (embedded) {
-                        $('.toc-visible').removeClass('toc-visible');
-                        unhideUI();
-                    }
-                } catch (err) {
-
-                    console.error(err);
-
-                } finally {
-                    //e.preventDefault();
-                    //e.stopPropagation();
-                    return false;
-                }
-            });
-            $('#readium-toc-body').prepend('<button tabindex="50" type="button" class="close" data-dismiss="modal" aria-label="' + Strings.i18n_close + ' ' + Strings.toc + '" title="' + Strings.i18n_close + ' ' + Strings.toc + '"><span aria-hidden="true">&times;</span></button>');
-            $('#readium-toc-body button.close').on('click', function () {
-                tocShowHideToggle();
-                /*
-                var bookmark = JSON.parse(readium.reader.bookmarkCurrentPage());
-                $('#app-container').removeClass('toc-visible');
-                if (embedded){
-                    $(document.body).removeClass('hide-ui');
-                }else if (readium.reader.handleViewportResize){
-                    readium.reader.handleViewportResize();
-                    readium.reader.openSpineItemElementCfi(bookmark.idref, bookmark.contentCFI, readium.reader);
-                }
-                */
-                return false;
-            })
 //        var KEY_ENTER = 0x0D;
 //        var KEY_SPACE = 0x20;
             var KEY_END = 0x23;
@@ -513,58 +403,7 @@ define([
 //        var KEY_RIGHT = 0x27;
             var KEY_DOWN = 0x28;
 
-            $('#readium-toc-body').keydown(function (event) {
-                var next = null;
-                var blurNode = event.target;
-                switch (event.which) {
-                    case KEY_HOME:
-                        //find first li >a
-                        next = $('#readium-toc-body li >a')[0];
-                        break;
 
-                    case KEY_END:
-                        // find last a within toc
-                        next = $('#readium-toc-body a').last()[0];
-                        break;
-
-                    case KEY_DOWN:
-                        if (blurNode.tagName == "BUTTON") {
-                            var existsFocusable = $('#readium-toc-body a[tabindex="60"]');
-                            if (existsFocusable.length > 0) {
-                                next = existsFocusable[0];
-                            } else {
-                                // go to first entry
-                                next = $('#readium-toc-body li >a')[0];
-                            }
-                        } else {
-                            // find all the a elements, find previous focus (tabindex=60) then get next
-                            var $items = $('#readium-toc-body a');
-                            var index = $('a[tabindex="60"]').index('#readium-toc-body a');
-                            //var index = $('a[tabindex="60"]').index($items); // not sure why this won't work?
-                            if (index > -1 && index < $items.length - 1) {
-                                next = $items.get(index + 1);
-                            }
-                        }
-                        break;
-
-                    case KEY_UP:
-                        // find all the a elements, find previous focus (tabindex=60) then get previous
-                        var $items = $('#readium-toc-body a');
-                        var index = $('a[tabindex="60"]').index('#readium-toc-body a');
-                        if (index > -1 && index > 0) {
-                            next = $items.get(index - 1);
-                        }
-                        break;
-
-                    default:
-                        return;
-                }
-                if (next) {
-                    event.preventDefault();
-                    setTimeout(next.focus(), 5);
-                }
-                return;
-            }); // end of onkeyup
         } // end of loadToc
 
         var toggleFullScreen = function () {
@@ -572,7 +411,7 @@ define([
             if (!screenfull.enabled) return;
 
             screenfull.toggle();
-        }
+        };
 
         if (screenfull.enabled) {
 

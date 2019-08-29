@@ -1,22 +1,32 @@
 var readiumReader = null;
 
-define([], function () {
+define(['./TOCJsonCreator'], function (TOCJsonCreator) {
     var externalcontrols = null;
 
 
     var ExternalControls = function () {
-        this.metadata= null;
+        this.metadata = null;
         this.reader = null;
         this.channel = null;
         this.auto_bookmark = true;
+        this.TocJsonObject = null;
+        this.currentPackageDocument = null;
     };
 
-    ExternalControls.prototype.epubLoaded = function (metadata, reader) {
-        if(func_exists("onEpubLoadSuccess")){
+    ExternalControls.prototype.epubLoaded = function (metadata, currentPackageDocument, reader) {
+        if (func_exists("onEpubLoadSuccess") && func_exists("onTOCLoaded")) {
+            var self = this;
             this.metadata = metadata;
             this.reader = reader;
+            this.currentPackageDocument = currentPackageDocument;
             //TODO REMOVE
             readiumReader = reader;
+
+            currentPackageDocument.generateTocListDOM(function (dom) {
+                self.TocJsonObject = TOCJsonCreator.createTOCJson(TOCJsonCreator.getFixedTocElement(dom));
+                onTOCLoaded(self.hasTOC());
+            });
+
             this.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, function (pageChangeData) {
                 //this.paginationChangeInfo = pageChangeData;
             });
@@ -26,7 +36,7 @@ define([], function () {
     };
 
     ExternalControls.prototype.epubFailed = function (error) {
-        if(func_exists("onEpubLoadFail")){
+        if (func_exists("onEpubLoadFail")) {
             onEpubLoadFail(error);
         }
     };
@@ -68,6 +78,22 @@ define([], function () {
         return this.auto_bookmark;
     };
     /* ----------- RELATED BOOKMARK END ----------- */
+
+    /* ----------- RELATED TOC ----------- */
+    ExternalControls.prototype.getTOCJson = function () {
+        return JSON.stringify(this.TocJsonObject);
+    };
+
+    ExternalControls.prototype.hasTOC = function () {
+        return (this.TocJsonObject != null);
+    };
+
+    ExternalControls.prototype.goToPage = function(href){
+        var tocUrl = this.currentPackageDocument.getToc();
+        this.reader.openContentUrl(href, tocUrl, undefined);
+    };
+
+    /* ---------- RELATED TOC END -------- */
 
 
     function func_exists(fname) {

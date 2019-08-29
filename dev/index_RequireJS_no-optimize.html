@@ -72,7 +72,7 @@
                 });
 
                 $("#bookmark").on("click", function () {
-                    makeBookMark();
+                    makeBookmark();
                 });
 
 
@@ -80,6 +80,41 @@
                 });
             });
         });
+
+        registerEvent("onEpubLoadSuccess", function () {
+
+        });
+
+        registerEvent("onEpubLoadFail", function () {
+
+        });
+
+        registerEvent("onTOCLoaded", function (hasTOC) {
+            if (hasTOC) {
+                var toc = getTOCJson();
+                console.log(toc);
+                $('.customTOC').empty();
+                $('.customTOC').append($(crateOL_Recursively(JSON.parse(toc))));
+            }
+        });
+        
+        function crateOL_Recursively(json) {
+            var string = "<ol>";
+            json.some(function (item) {
+                string += `<li><a onclick="navgigateToPage('${item.Id_link}')">${item.name}</a>`;
+                if(item.sub.length > 0){
+                    string += crateOL_Recursively(item.sub);
+                }
+                string += "</li>";
+            });
+            return string + "</ol>";
+        }
+        
+        function navgigateToPage(href) {
+            goToPage(href)
+        }
+        
+
     </script>
 
 
@@ -94,8 +129,16 @@
 </div>
 <nav id="app-navbar" class="navbar" role="banner" aria-label="{{Strings.i18n_toolbar}}">
 </nav>
-<div id="app-container">
-</div>
+<table style="width:100%; height:100%" >
+    <tr>
+        <td width="20%">
+            <div class="customTOC"></div>
+        </td>
+        <td width="80%" style="position: relative">
+            <div id="app-container"></div>
+        </td>
+    </tr>
+</table>
 
 </body>
 
