@@ -75,6 +75,25 @@
                     makeBookmark();
                 });
 
+                $("#font_size").on("change", function () {
+                    setFontSize(parseInt($(this).val()));
+                });
+                $("#page_width").on("change", function () {
+                    changeColumnMaxWidth(parseInt($(this).val()));
+                });
+
+                $("#theme_list").on("change", function () {
+                    setTheme($(this).val());
+                });
+
+                $("#scrolling_mode").on("change", function () {
+                    setScrollMode($(this).val());
+                });
+
+                $("#display_format").on("change", function () {
+                    setDisplayFormat($(this).val());
+                });
+
 
                 require(["readium_js_viewer/ReadiumViewer"], function () {
                 });
@@ -82,6 +101,39 @@
         });
 
         registerEvent("onEpubLoadSuccess", function () {
+            $("#font_size").attr("min", getRecommendedFontSizeRange().min);
+            $("#font_size").attr("max", getRecommendedFontSizeRange().max);
+            $("#page_width").attr("min", getRecommendedColumnMaxWidthRange().min);
+            $("#page_width").attr("max", getRecommendedColumnMaxWidthRange().max);
+
+            var list = getAvailableThemes();
+            list.some(function (item) {
+                $("#theme_list").append(`<option value="${item.id}" >${item.name}</option>`);
+            });
+
+            var list = getAvailableScrollModes();
+            list.some(function (item) {
+                $("#scrolling_mode").append(`<option value="${item.id}" >${item.name}</option>`);
+            });
+
+            var list = getAvailableDisplayFormats();
+            list.some(function (item) {
+                $("#display_format").append(`<option value="${item.id}" >${item.name}</option>`);
+            });
+
+            /*
+            columnGap: 60 --->
+            columnMaxWidth: 550
+            columnMinWidth: 400
+            fontSelection: 0
+            fontSize: 100 --->
+            scroll: "auto"
+            syntheticSpread: "auto"
+            theme: "default-theme"
+            * */
+            var settings = getCurrentReaderSettings();
+            $("#page_width").val(settings.columnGap); //NEED TO REVISE
+            $("#font_size").val(settings.fontSize);
 
         });
 
@@ -97,23 +149,23 @@
                 $('.customTOC').append($(crateOL_Recursively(JSON.parse(toc))));
             }
         });
-        
+
         function crateOL_Recursively(json) {
             var string = "<ol>";
             json.some(function (item) {
                 string += `<li><a onclick="navgigateToPage('${item.Id_link}')">${item.name}</a>`;
-                if(item.sub.length > 0){
+                if (item.sub.length > 0) {
                     string += crateOL_Recursively(item.sub);
                 }
                 string += "</li>";
             });
             return string + "</ol>";
         }
-        
+
         function navgigateToPage(href) {
             goToPage(href)
         }
-        
+
 
     </script>
 
@@ -126,10 +178,17 @@
     <button id="prev-button">previous</button>
     <button id="next-button">next</button>
     <button id="bookmark">bookmark</button>
+    Font Sizing
+    <input type="range" id="font_size" min="0" max="10">
+    Page Width
+    <input type="range" id="page_width" min="0" max="10">
+    <select id="theme_list"></select>
+    <select id="scrolling_mode"></select>
+    <select id="display_format"></select>
 </div>
 <nav id="app-navbar" class="navbar" role="banner" aria-label="{{Strings.i18n_toolbar}}">
 </nav>
-<table style="width:100%; height:100%" >
+<table style="width:100%; height:100%">
     <tr>
         <td width="20%">
             <div class="customTOC"></div>

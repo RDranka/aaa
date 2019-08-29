@@ -7,8 +7,8 @@ var exControls = null;
 var events = {};
 
 /**
-* this method is mostely for non mobile devices
-* */
+ * this method is mostely for non mobile devices
+ * */
 function registerEvent(eventName, func) {
     events[eventName] = func;
 }
@@ -18,10 +18,10 @@ function registerEvent(eventName, func) {
  * successfully loaded, we can use this to trigger mobile event
  * **/
 function onEpubLoadSuccess(externalcontrols) {
-    if(events["onEpubLoadSuccess"]){
+    exControls = externalcontrols;
+    if (events["onEpubLoadSuccess"]) {
         events["onEpubLoadSuccess"](externalcontrols);
     }
-    exControls = externalcontrols;
     Log.debug("epub Loaded");
 }
 
@@ -30,7 +30,7 @@ function onEpubLoadSuccess(externalcontrols) {
  * failed to load, we can use this to trigger mobile event
  * **/
 function onEpubLoadFail(error) {
-    if(events["onEpubLoadFail"]){
+    if (events["onEpubLoadFail"]) {
         events["onEpubLoadFail"](error);
     }
     Log.debug("epub load failed");
@@ -42,72 +42,9 @@ function onEpubLoadFail(error) {
  * whether the epub has TOC or not
  * */
 function onTOCLoaded(hasToC) {
-    if(events["onTOCLoaded"]){
+    if (events["onTOCLoaded"]) {
         events["onTOCLoaded"](hasToC);
     }
-}
-
-/**
- * @return {string}
- */
-function getBackgroundColorsList() {
-    return JSON.stringify([
-        "Default", "Black and White", "Arabian Nights", "Sands of Dune", "Ballard Blues"
-    ]);
-}
-
-function getCurrentFontSize() {
-
-}
-
-function getCurrentPageWidth() {
-
-}
-
-function getCurrentDisplayFormat() {
-
-}
-
-function getCurrentScrollMode() {
-
-}
-
-function getFontSizeRange(type) {
-    if (type === DEVICE_TYPES.ANDROID) {
-        return JSON.stringify({"min": 10, "max": 25});
-    } else {
-        return JSON.stringify({"min": 10, "max": 25});
-    }
-}
-
-function getPageWidthRange(type) {
-    if (type === DEVICE_TYPES.ANDROID) {
-        return JSON.stringify({"min": 10, "max": 25});
-    } else {
-        return JSON.stringify({"min": 10, "max": 25});
-    }
-}
-
-
-function setFontSize(size) {
-
-}
-
-function setBackgroundColor(id) {
-
-}
-
-
-function setPageWidth(width) {
-
-}
-
-function setDisplayFormat(format) {
-
-}
-
-function setScrollMode(scrollMode) {
-
 }
 
 /* ----------- RELATED TO PAGES NAVIGATION ----------- */
@@ -126,18 +63,20 @@ function hasNextPage() {
 function hasPrevPage() {
     return exControls.hasPrevPage();
 }
-/* ----------- RELATED TO PAGES NAVIGATION END ----------- */
 
+/* ----------- RELATED TO PAGES NAVIGATION END ----------- */
 
 
 /*------------ BOOKMARKS ----------------------------------*/
 function makeBookmark() {
     return exControls.makeBookMark();
 }
+
 //Default is set to auto book mark, and to
 function setAutoBookmark($boolean) {
     return exControls.setAutoBookmark($boolean);
 }
+
 /*------------ BOOKMARKS END ------------------------------*/
 
 
@@ -149,11 +88,64 @@ function getTOCJson() {
 function goToPage(href) {
     exControls.goToPage(href);
 }
+
 /*--------------- TOC END-------------------------------- */
 
-function Log() {
-    
+
+/* --------------- SETTINGS ---------------------------*/
+
+function setFontSize(size) {
+    exControls.changeFontSize(size);
 }
+
+function getRecommendedFontSizeRange() {
+    return exControls.getRecommendedFontSizeRange();
+}
+
+function getAvailableThemes() {
+    return exControls.getAvailableThemes();
+}
+
+function setTheme(theme_id) {
+    exControls.setTheme(theme_id);
+}
+
+
+function getAvailableScrollModes() {
+    return exControls.getAvailableScrollOptions();
+}
+
+function setScrollMode(option_id) {
+    exControls.setScrollOption(option_id);
+}
+
+function getAvailableDisplayFormats() {
+    return exControls.getAvailableDisplayFormats();
+}
+
+function setDisplayFormat(format_id) {
+    exControls.setDisplayFormat(format_id);
+}
+
+function changeColumnMaxWidth(size) {
+    exControls.changeColumnMaxWidth(size);
+}
+
+function getRecommendedColumnMaxWidthRange() {
+    return exControls.getRecommendedColumnWidthRange();
+}
+
+function getCurrentReaderSettings() {
+    return exControls.getCurrentReaderSettings();
+}
+
+/* --------------- SETTINGS END ------------------------*/
+
+
+function Log() {
+
+}
+
 Log.debug = function (debug) {
     console.log(debug);
 };

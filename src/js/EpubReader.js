@@ -216,49 +216,7 @@ define([
             }
         };
 
-        var tocShowHideToggle = function () {
 
-            unhideUI();
-
-            var $appContainer = $('#app-container'),
-                hide = $appContainer.hasClass('toc-visible');
-            var bookmark;
-            if (readium.reader.handleViewportResize && !embedded) {
-                bookmark = JSON.parse(readium.reader.bookmarkCurrentPage());
-            }
-
-            if (hide) {
-                $appContainer.removeClass('toc-visible');
-
-                // clear tabindex off of any previously focused ToC item
-                var existsFocusable = $('#readium-toc-body a[tabindex="60"]');
-                if (existsFocusable.length > 0) {
-                    existsFocusable[0].setAttribute("tabindex", "-1");
-                }
-                /* end of clear focusable tab item */
-                setTimeout(function () {
-                    $('#tocButt')[0].focus();
-                }, 100);
-            } else {
-                $appContainer.addClass('toc-visible');
-
-                setTimeout(function () {
-                    $('#readium-toc-body button.close')[0].focus();
-                }, 100);
-            }
-
-            if (embedded) {
-                hideLoop(null, true);
-            } else if (readium.reader.handleViewportResize) {
-
-                readium.reader.handleViewportResize(bookmark);
-
-                // setTimeout(function()
-                // {
-                //     readium.reader.openSpineItemElementCfi(bookmark.idref, bookmark.contentCFI, readium.reader);
-                // }, 90);
-            }
-        };
 
         var showScaleDisplay = function () {
             $('.zoom-wrapper').show();
@@ -745,8 +703,6 @@ define([
                     }, 100);
                 }
             });
-
-            $('.icon-toc').on('click', tocShowHideToggle);
 
             var setTocSize = function () {
                 var appHeight = $(document.body).height() - $('#app-container')[0].offsetTop;
