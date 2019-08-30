@@ -34,7 +34,10 @@ define(['./TOCJsonCreator', 'Settings'], function (TOCJsonCreator, Settings) {
                     }
                 }
                 self.readerSettings = newSettings;
-                updateReader(self.reader, self.readerSettings);
+                setTimeout(function () {
+                    //TODO this timeout need to be removed, however right now if I do that we get and error because two updates happesns in the same time
+                    updateReader(self.reader, self.readerSettings);
+                }, 2000);
             });
 
 
@@ -173,14 +176,9 @@ define(['./TOCJsonCreator', 'Settings'], function (TOCJsonCreator, Settings) {
         updateReader(this.reader, this.readerSettings);
     };
 
-    ExternalControls.prototype.getCurrentReaderSettings = function(){
+    ExternalControls.prototype.getCurrentReaderSettings = function () {
         return this.readerSettings;
     };
-
-
-
-
-
 
 
     function func_exists(fname) {
