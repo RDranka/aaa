@@ -25,7 +25,7 @@ define([
     GesturesHandler,
     Readium,
     Helpers,
-    BookmarkData
+    BookmarkData,
 ) {
 
     var KEYS = {
@@ -556,7 +556,8 @@ define([
 
     return {
         loadUI: init,
-        updateReader : updateReader
+        updateReader : updateReader,
+        ensureUrlIsRelativeToApp : ensureUrlIsRelativeToApp
     }
 
 });

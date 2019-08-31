@@ -1,4 +1,10 @@
-define(['jquery', './EpubLibrary', './EpubReader', './ReaderWIthControls', 'readium_shared_js/helpers', 'URIjs'], function ($, EpubLibrary, EpubReader, ReaderWIthControls, Helpers, URI) {
+define([
+    'jquery',
+    './EpubLibrary',
+    './TreineticEpubReader',
+    'readium_shared_js/helpers',
+    'URIjs'
+], function ($, EpubLibrary, ReaderWIthControls, Helpers, URI) {
 
     var _initialLoad = true; // replaces pushState() with replaceState() at first load
     var initialLoad = function () {
@@ -59,10 +65,10 @@ define(['jquery', './EpubLibrary', './EpubReader', './ReaderWIthControls', 'read
             epub = ebookURL_filepath;
         }
 
-        ebookURL_filepath = EpubReader.ensureUrlIsRelativeToApp(ebookURL_filepath);
+        ebookURL_filepath = ReaderWIthControls.ensureUrlIsRelativeToApp(ebookURL_filepath);
 
         var epubs = eventPayload.epubs;
-        epubs = EpubReader.ensureUrlIsRelativeToApp(epubs);
+        epubs = ReaderWIthControls.ensureUrlIsRelativeToApp(epubs);
 
         var urlState = Helpers.buildUrlQueryParameters(undefined, {
             epub: ebookURL_filepath,
@@ -91,7 +97,7 @@ define(['jquery', './EpubLibrary', './EpubReader', './ReaderWIthControls', 'read
             importEPUB = eventPayload;
         }
 
-        libraryURL = EpubReader.ensureUrlIsRelativeToApp(libraryURL);
+        libraryURL = ReaderWIthControls.ensureUrlIsRelativeToApp(libraryURL);
 
         var urlState = Helpers.buildUrlQueryParameters(undefined, {
             epubs: (libraryURL ? libraryURL : undefined),

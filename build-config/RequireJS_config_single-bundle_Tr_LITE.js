@@ -16,10 +16,10 @@ require.config({
 
     baseUrl: process._RJS_baseUrl(2),
 
-    name: "readium-js-viewer_all_LITE",
+    name: "readium-js-viewer_all_Tr_LITE",
 
     // relative to this config file (not baseUrl)
-    out: "../build-output/_single-bundle/readium-js-viewer_all_LITE.js",
+    out: "../build-output/_single-bundle/readium-js-viewer_all_Tr_LITE",
 
     include: [
       "readium_js_viewer/TreineticViewerLite"
@@ -36,7 +36,7 @@ require.config({
         "version":
             process._RJS_rootDir(2) + '/build-output/version',
 
-        "readium-js-viewer_all_LITE":
+        "readium-js-viewer_all_tr_LITE":
             process._RJS_rootDir(2) + '/readium-js/readium-shared-js/node_modules/almond/almond'
     }
 });

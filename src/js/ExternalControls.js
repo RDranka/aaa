@@ -1,6 +1,6 @@
 var readiumReader = null;
 
-define(['./TOCJsonCreator', 'Settings' , './ReaderWIthControls'], function (TOCJsonCreator, Settings, ReaderWIthControls) {
+define(['./TOCJsonCreator', 'Settings' , './TreineticEpubReader'], function (TOCJsonCreator, Settings, ReaderWIthControls) {
     var externalcontrols = null;
 
 
