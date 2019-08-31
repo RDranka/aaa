@@ -1,6 +1,4 @@
-var readiumReader = null;
-
-define(['./TOCJsonCreator', 'Settings' , './TreineticEpubReader'], function (TOCJsonCreator, Settings, ReaderWIthControls) {
+define(['./TOCJsonCreator', 'Settings' , './TreineticHelpers'], function (TOCJsonCreator, Settings, TreineticHelpers) {
     var externalcontrols = null;
 
 
@@ -20,9 +18,6 @@ define(['./TOCJsonCreator', 'Settings' , './TreineticEpubReader'], function (TOC
             this.metadata = metadata;
             this.reader = reader;
             this.currentPackageDocument = currentPackageDocument;
-
-            //TODO REMOVE
-            readiumReader = reader;
 
             Settings.get('reader', function (readerSettings) {
                 var readerSettings = readerSettings || self.readerSettings;
@@ -102,7 +97,7 @@ define(['./TOCJsonCreator', 'Settings' , './TreineticEpubReader'], function (TOC
 
     ExternalControls.prototype.changeFontSize = function (size) {
         this.readerSettings = cloneUpdate(this.readerSettings, "fontSize", size);
-        ReaderWIthControls.updateReader(this.reader, this.readerSettings);
+        TreineticHelpers.updateReader(this.reader, this.readerSettings);
     };
 
     ExternalControls.prototype.getRecommendedFontSizeRange = function () {
@@ -122,7 +117,7 @@ define(['./TOCJsonCreator', 'Settings' , './TreineticEpubReader'], function (TOC
 
     ExternalControls.prototype.setTheme = function (theme_id) {
         this.readerSettings = cloneUpdate(this.readerSettings, "theme", theme_id);
-        ReaderWIthControls.updateReader(this.reader, this.readerSettings);
+        TreineticHelpers.updateReader(this.reader, this.readerSettings);
     };
 
     ExternalControls.prototype.getAvailableScrollOptions = function () {
@@ -135,7 +130,7 @@ define(['./TOCJsonCreator', 'Settings' , './TreineticEpubReader'], function (TOC
 
     ExternalControls.prototype.setScrollOption = function (option_id) {
         this.readerSettings = cloneUpdate(this.readerSettings, "scroll", option_id);
-        ReaderWIthControls.updateReader(this.reader, this.readerSettings);
+        TreineticHelpers.updateReader(this.reader, this.readerSettings);
     };
 
     ExternalControls.prototype.getAvailableDisplayFormats = function () {
@@ -148,7 +143,7 @@ define(['./TOCJsonCreator', 'Settings' , './TreineticEpubReader'], function (TOC
 
     ExternalControls.prototype.setDisplayFormat = function (option_id) {
         this.readerSettings = cloneUpdate(this.readerSettings, "syntheticSpread", option_id);
-        ReaderWIthControls.updateReader(this.reader, this.readerSettings);
+        TreineticHelpers.updateReader(this.reader, this.readerSettings);
     };
 
     ExternalControls.prototype.getRecommendedColumnWidthRange = function () {
@@ -157,7 +152,7 @@ define(['./TOCJsonCreator', 'Settings' , './TreineticEpubReader'], function (TOC
 
     ExternalControls.prototype.changeColumnMaxWidth = function (int_size) {
         this.readerSettings = cloneUpdate(this.readerSettings, "columnMaxWidth", int_size);
-        ReaderWIthControls.updateReader(this.reader, this.readerSettings);
+        TreineticHelpers.updateReader(this.reader, this.readerSettings);
     };
 
     ExternalControls.prototype.getCurrentReaderSettings = function () {
