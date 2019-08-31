@@ -100,6 +100,10 @@ define(['./TOCJsonCreator', 'Settings'], function (TOCJsonCreator, Settings) {
 
 
     /* ----------- RELATED TOC ----------- */
+    ExternalControls.prototype.setTOCJson = function(json){
+        this.TocJsonObject = json;
+    };
+
     ExternalControls.prototype.getTOCJson = function () {
         return JSON.stringify(this.TocJsonObject);
     };
