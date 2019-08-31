@@ -43,6 +43,8 @@ module.exports = function (grunt) {
             main: {
                 files: [
                     {expand: true, src: ['index.html'], dest: 'dist/'},
+                    {expand: true, src: ['Readme.md'], dest: 'dist/'},
+                    {expand: true, src: ['../../epub_content/accessible_epub_3/**'], dest: 'dist/epub_content/epub'},
                 ],
             },
         },
