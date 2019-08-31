@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="../src/images/readium_favicon.png" rel="shortcut icon"/>
+    <link href="../src/images/readium-touch-icon.png" rel="apple-touch-icon"/>
+
+    <style>
+        .library-item {
+            height: 100px;
+        }
+
+        body:not(.list-view) .library-item .no-cover {
+            width: 300px;
+            height: 400px;
+            font-size: 40px;
+        }
+
+        #reading-area {
+            top: 0px !important;
+        }
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="../src/images/readium_favicon.png" rel="shortcut icon"/>
+    <link href="../src/images/readium-touch-icon.png" rel="apple-touch-icon"/>
+
+    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css"
+          href="../node_modules/bootstrap-accessibility-plugin/plugins/css/bootstrap-accessibility.css">
+
+    <link rel="stylesheet" type="text/css" href="../src/css/sourcesanspro.css">
+    <link rel="stylesheet" type="text/css" href="../src/css/readium_js.css">
+    <link rel="stylesheet" type="text/css" href="../src/css/viewer.css">
+    <link rel="stylesheet" type="text/css" href="../src/css/viewer_audio.css">
+    <link rel="stylesheet" type="text/css" href="../src/css/settings.css">
+
+    <script type="text/javascript" src="../build-output/_single-bundle/readium-js-viewer_all_LITE.js"></script>
+    <script type="text/javascript" src="./RequireJS_config.js"></script>
+    <script type="text/javascript" src="../src/js/mobile_commands/Mobile_commands.js"></script>
+    <script type="text/javascript" src="../src/js/mobile_commands/DealWIthMobileDevices.js"></script>
+    <script type="text/javascript" src="../src/js/mobile_commands/init_reader.js"></script>
+
+
+    <script type="text/javascript">
+        // Working with Mobile devices
+        registerEvent("onEpubLoadSuccess", function () {
+            Notification.toDevices("onEpubLoadSuccess");
+        });
+
+        registerEvent("onEpubLoadFail", function () {
+            Notification.toDevices("onEpubLoadFail");
+        });
+
+        registerEvent("onTOCLoaded", function (hasTOC) {
+            var message = {
+               hasTOC : hasTOC,
+               toc : []
+            };
+            if (!hasTOC) {
+                message.toc =  JSON.parse(getTOCJson());
+            }
+            Notification.toDevices("onTOCLoaded", JSON.stringify(message));
+        });
+
+
+        /*
+        *
+        * Here are all the available functions but make sure to call them after the
+        * correct event from "onEpubLoadSuccess" | "onTOCLoaded" etc called so that you don't get any exceptions
+        * each of these methods will accept strings and return strings which means strings can be json or non json
+        * ( I did this because i'm not sure whther IOS and android can accept JS Objects )
+        *
+        * hasNextPage()
+        * hasPrevPage()
+        *
+        * nextPage();
+        * prevPage();
+        *
+        * makeBookmark();
+        *
+        * json = getRecommendedFontSizeRange();
+        * setFontSize("12");
+        *
+        * json = getRecommendedColumnMaxWidthRange();
+        * changeColumnMaxWidth("50");
+        *
+        * json = getAvailableThemes();
+        * setTheme("theme_id");
+        *
+        * json = getAvailableScrollModes()
+        * setScrollMode("scroll_mode_id");
+        *
+        * json = getAvailableDisplayFormats()
+        * setDisplayFormat("display_format_id");
+        *
+        *
+        * json = getCurrentReaderSettings();
+        * */
+
+
+    </script>
+
+
+</head>
+
+<!-- This is all application-specific HTML -->
+<body>
+<div id="app-container">
+    <div id="reading-area" role="main">
+        <div id="epub-reader-container">
+            <div id="epub-reader-frame">
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+</html>

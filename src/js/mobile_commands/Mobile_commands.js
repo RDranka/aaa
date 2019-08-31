@@ -43,7 +43,8 @@ function onEpubLoadFail(error) {
  * */
 function onTOCLoaded(hasToC) {
     if (events["onTOCLoaded"]) {
-        events["onTOCLoaded"](hasToC);
+        var hasToc = (hasToC && hasToC.length > 0);
+        events["onTOCLoaded"](hasToc);
     }
 }
 

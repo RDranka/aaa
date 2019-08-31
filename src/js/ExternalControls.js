@@ -85,7 +85,7 @@ define(['./TOCJsonCreator', 'Settings' , './TreineticEpubReader'], function (TOC
 
     /* ----------- RELATED TOC ----------- */
     ExternalControls.prototype.getTOCJson = function () {
-        return JSON.stringify(this.TocJsonObject);
+        return JSON.stringify(this.TocJsonObject ? this.TocJsonObject : []);
     };
 
     ExternalControls.prototype.hasTOC = function () {
