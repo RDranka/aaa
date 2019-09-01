@@ -154,6 +154,6 @@
     "deploy:cloudReader:copy:epub_content": "node ./readium-js/readium-shared-js/node_modules/ncp/bin/ncp epub_content/ dist/cloud-reader/epub_content/",
     "deploy:cloudReader:copy:sourcemap": "node ./readium-js/readium-shared-js/node_modules/ncp/bin/ncp dist/cloud-reader_sourcemap/ dist/cloud-reader/scripts/ && ( node ./readium-js/readium-shared-js/node_modules/ncp/bin/ncp dist/zip_sourcemap/ dist/cloud-reader/scripts/zip/ || echo \"=== SUCCESS [ignore previous error]: no sourcemaps were generated for zip web-worker, deflate, inflate (no uglification).\" )",
     "deploy:cloudReaderLite:copy:sourcemap": "node ./readium-js/readium-shared-js/node_modules/ncp/bin/ncp dist/cloud-reader-lite_sourcemap/ dist/cloud-reader-lite/scripts/ && ( node ./readium-js/readium-shared-js/node_modules/ncp/bin/ncp dist/zip_sourcemap/ dist/cloud-reader-lite/scripts/zip/ || echo \"=== SUCCESS [ignore previous error]: no sourcemaps were generated for zip web-worker, deflate, inflate (no uglification).\" )",
-    "tr_build" : "./tr_build.sh"
+    "tr_build": "./tr_build.sh"
   }
 }
