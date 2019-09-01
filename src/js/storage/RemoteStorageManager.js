@@ -88,7 +88,7 @@ define(['remotestorage', 'jquery'], function(rs, $){
             // });
             $(window).trigger('storageReady');
         });
-        client = remoteStorage.scope('/public/readium/');
+        client = remoteStorage.scope('/public/Treinetic/');
     });
 
     return RemoteStorageManager

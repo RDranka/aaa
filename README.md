@@ -4,10 +4,10 @@ _Note: Please don't use the zip download feature on this repo as this repo uses 
 
 **EPUB reader written in HTML, CSS and Javascript.**
 
-This Readium software component implements the Readium Chrome extension / app for offline reading ( https://chrome.google.com/webstore/detail/readium/fepbnnnkkadjhjahcafoaglimekefifl ),
+This Readium software component implements the Readium Chrome extension / app for offline reading ( https://chrome.google.com/webstore/detail/Treinetic/fepbnnnkkadjhjahcafoaglimekefifl ),
 and the "cloud reader" for online e-books ( https://readium.firebaseapp.com is the deployment URL for automated builds from the develop branch, https://readium-master.surge.sh links to the latest app release from the master branch).
 
-Please see https://github.com/readium/readium-shared-js for more information about the underlying rendering engine.
+Please see https://github.com/Treinetic/readium-shared-js for more information about the underlying rendering engine.
 
 
 ## License
@@ -28,7 +28,7 @@ See [license.txt](./license.txt).
 
 ### Git initialisation
 
-* `git clone --recursive -b BRANCH_NAME https://github.com/readium/readium-js-viewer.git readium-js-viewer` (replace "BRANCH_NAME" with e.g. "develop")
+* `git clone --recursive -b BRANCH_NAME https://github.com/Treinetic/readium-js-viewer.git readium-js-viewer` (replace "BRANCH_NAME" with e.g. "develop")
 * `cd readium-js-viewer`
 * `git submodule update --init --recursive` to ensure that the readium-js-viewer chain of dependencies is initialised (readium-js, readium-shared-js)
 * `git checkout BRANCH_NAME && git submodule foreach --recursive "git checkout BRANCH_NAME"` (or simply `cd` inside each repository / submodule, and manually enter the desired branch name: `git checkout BRANCH_NAME`) Git should automatically track the corresponding branch in the 'origin' remote.
@@ -96,12 +96,12 @@ Remark: logs of HTTP requests are preserved in two separate files `http_app.log`
 
 ### Forking
 
-Assuming a fork of `https://github.com/readium/readium-js-viewer` is made under `USER` at `https://github.com/USER/readium-js-viewer`, the `.gitmodules` file ( https://github.com/readium/readium-js-viewer/blob/develop/.gitmodules ) will still point to the original submodule URL (at `readium`, instead of `USER`). Thankfully, one can simply modify the `.gitmodules` file by replacing `https://github.com/readium/` with `https://github.com/USER/`, and do this for every submodule (`readium-js-viewer` > `readium-js` > `readium-shared-js`). Then the Git command `git submodule sync` can be invoked, for each submodule.
+Assuming a fork of `https://github.com/Treinetic/readium-js-viewer` is made under `USER` at `https://github.com/USER/readium-js-viewer`, the `.gitmodules` file ( https://github.com/Treinetic/readium-js-viewer/blob/develop/.gitmodules ) will still point to the original submodule URL (at `readium`, instead of `USER`). Thankfully, one can simply modify the `.gitmodules` file by replacing `https://github.com/Treinetic/` with `https://github.com/USER/`, and do this for every submodule (`readium-js-viewer` > `readium-js` > `readium-shared-js`). Then the Git command `git submodule sync` can be invoked, for each submodule.
 
 
 ### Plugins integration
 
-When invoking the `npm run build` command, the generated `build-output` folder contains RequireJS module bundles that include the default plugins specified in `readium-js/readium-js-shared/plugins/plugins.cson` (see the plugins documentation https://github.com/readium/readium-shared-js/blob/develop/PLUGINS.md ). Developers can override the default plugins configuration by using an additional file called `plugins-override.cson`. This file is git-ignored (not persistent in the Git repository), which means that Readium's default plugins configuration is never at risk of being mistakenly overridden by developers, whilst giving developers the possibility of creating custom builds on their local machines.
+When invoking the `npm run build` command, the generated `build-output` folder contains RequireJS module bundles that include the default plugins specified in `readium-js/readium-js-shared/plugins/plugins.cson` (see the plugins documentation https://github.com/Treinetic/readium-shared-js/blob/develop/PLUGINS.md ). Developers can override the default plugins configuration by using an additional file called `plugins-override.cson`. This file is git-ignored (not persistent in the Git repository), which means that Readium's default plugins configuration is never at risk of being mistakenly overridden by developers, whilst giving developers the possibility of creating custom builds on their local machines.
 
 For example, the `annotations` plugin can be activated by adding it to the `include` section in `readium-js/readium-js-shared/plugins/plugins-override.cson`.
 Then, in order to create / remove highlighted selections, simply comment `display:none` for `.icon-annotations` in the `src/css/viewer.css` file (this will enable an additional toolbar button).
@@ -133,7 +133,7 @@ Via SauceLabs:
 
 `npm run test:sauce` (runs all of the above)
 
-Travis (Continuous Integration) automatically uses a chromeApp and Firefox test matrix (2x modes), and uses SauceLabs to actually run the test. See https://travis-ci.org/readium/readium-js-viewer/
+Travis (Continuous Integration) automatically uses a chromeApp and Firefox test matrix (2x modes), and uses SauceLabs to actually run the test. See https://travis-ci.org/Treinetic/readium-js-viewer/
 
 ## Distribution
 

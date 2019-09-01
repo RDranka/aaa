@@ -69,15 +69,15 @@ licenses: [
     url: "http://opensource.org/licenses/BSD-3-Clause"
 ]
 
-homepage: "http://github.com/readium/readium-js-viewer"
+homepage: "http://github.com/Treinetic/readium-js-viewer"
 
 bugs:
-    url: "http://github.com/readium/readium-js-viewer/issues"
+    url: "http://github.com/Treinetic/readium-js-viewer/issues"
     email: "daniel.weck@gmail.com"
 
 repository:
     type: "git"
-    url: "git://github.com/readium/readium-js-viewer.git"
+    url: "git://github.com/Treinetic/readium-js-viewer.git"
 
 #####################################################################
 files: [

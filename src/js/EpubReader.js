@@ -723,7 +723,7 @@ BookmarkData){
     }
 
     //TODO: also update "previous/next page" commands status (disabled/enabled), not just button visibility.
-    // https://github.com/readium/readium-js-viewer/issues/188
+    // https://github.com/Treinetic/readium-js-viewer/issues/188
     // See onSwipeLeft() onSwipeRight() in gesturesHandler.
     // See nextPage() prevPage() in this class.
     var updateUI = function(pageChangeData){
@@ -1403,7 +1403,7 @@ BookmarkData){
                 repo1.branch = version.readiumJsViewer.branch;
                 repo1.release = version.readiumJsViewer.release;
                 repo1.timestamp = version.readiumJsViewer.timestamp;
-                repo1.url = "https://github.com/readium/" + repo1.name + "/tree/" + repo1.sha;
+                repo1.url = "https://github.com/Treinetic/" + repo1.name + "/tree/" + repo1.sha;
                 window.navigator.epubReadingSystem.readium.buildInfo.gitRepositories.push(repo1);
 
                 var repo2 = {};
@@ -1415,7 +1415,7 @@ BookmarkData){
                 repo2.branch = version.readiumJs.branch;
                 repo2.release = version.readiumJs.release;
                 repo2.timestamp = version.readiumJs.timestamp;
-                repo2.url = "https://github.com/readium/" + repo2.name + "/tree/" + repo2.sha;
+                repo2.url = "https://github.com/Treinetic/" + repo2.name + "/tree/" + repo2.sha;
                 window.navigator.epubReadingSystem.readium.buildInfo.gitRepositories.push(repo2);
 
                 var repo3 = {};
@@ -1427,7 +1427,7 @@ BookmarkData){
                 repo3.branch = version.readiumSharedJs.branch;
                 repo3.release = version.readiumSharedJs.release;
                 repo3.timestamp = version.readiumSharedJs.timestamp;
-                repo3.url = "https://github.com/readium/" + repo3.name + "/tree/" + repo3.sha;
+                repo3.url = "https://github.com/Treinetic/" + repo3.name + "/tree/" + repo3.sha;
                 window.navigator.epubReadingSystem.readium.buildInfo.gitRepositories.push(repo3);
 
                 // Debug check:

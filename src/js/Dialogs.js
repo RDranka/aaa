@@ -95,7 +95,7 @@ define(['hgn!readium_js_viewer_html_templates/managed-dialog.html', 'hgn!readium
             showModalDialog(true, title, body, buttons);
         },
         // Function below lifted off the "EPUB3 popup footnotes" feature branch:
-        // https://github.com/readium/readium-js-viewer/pull/505/files#diff-81e1ce6a00dd7f8664efb74b496611d9
+        // https://github.com/Treinetic/readium-js-viewer/pull/505/files#diff-81e1ce6a00dd7f8664efb74b496611d9
         showModalHTML : function(title, html){
             var body = $(html),
                 buttons = ButtonTemplate({

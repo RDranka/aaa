@@ -34,25 +34,25 @@
         node ./readium-js/readium-shared-js/readium-build-tools/genOPDS.js
             epub_content/epub_widgets.opds
             IDPF scriptable-components feature/logger-widget
-            /Samples/readium/tempwave-demo/embedded
+            /Samples/Treinetic/tempwave-demo/embedded
             APPEND
         &&
         node ./readium-js/readium-shared-js/readium-build-tools/genOPDS.js
             epub_content/epub_widgets.opds
             IDPF scriptable-components feature/logger-widget
-            /Samples/readium/tempwave-demo/packaged
+            /Samples/Treinetic/tempwave-demo/packaged
             APPEND
         &&
         node ./readium-js/readium-shared-js/readium-build-tools/genOPDS.js
             epub_content/epub_widgets.opds
             IDPF scriptable-components feature/logger-widget
-            /Samples/readium/logger-demo/packaged
+            /Samples/Treinetic/logger-demo/packaged
             APPEND
         &&
         node ./readium-js/readium-shared-js/readium-build-tools/genOPDS.js
             epub_content/epub_widgets.opds
             IDPF scriptable-components feature/logger-widget
-            /Samples/readium/logger-demo/embedded
+            /Samples/Treinetic/logger-demo/embedded
             APPEND
         &&
         node ./readium-js/readium-shared-js/readium-build-tools/genOPDS.js

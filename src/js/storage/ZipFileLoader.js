@@ -8,7 +8,7 @@ define(['zip', '../workers/Messages', 'inflate'], function(zip, Messages){
 
     ZipFileLoader = function(options){
         this.options = options;
-            //this.client = new RemoteStorage.BaseClient(remoteStorage, '/readium/');
+            //this.client = new RemoteStorage.BaseClient(remoteStorage, '/Treinetic/');
     }
 
     ZipFileLoader.prototype = {

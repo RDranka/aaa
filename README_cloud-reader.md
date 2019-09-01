@@ -6,7 +6,7 @@ Thankfully, the Readium Cloud / Web Reader shares the majority of its codebase 
 
 1) Make sure NodeJS is installed on your computer ( https://nodejs.org )
 2) Open a command window, and type or copy/paste: `npm install -g http-server`
-3) Download the file `Readium_cloud-reader-lite.zip` from https://github.com/readium/readium-js-viewer/releases
+3) Download the file `Readium_cloud-reader-lite.zip` from https://github.com/Treinetic/readium-js-viewer/releases
 4) Unzip `Readium_cloud-reader-lite.zip` on your filesystem, for instance: `/PATH/TO/FOLDER/cloud-reader-lite/`
 5) In the command window, type `cd /PATH/TO/FOLDER/cloud-reader-lite/` to move into this new folder
 6) Open the filesystem explorer and navigate to `/PATH/TO/FOLDER/cloud-reader-lite/`
