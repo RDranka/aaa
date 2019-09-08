@@ -1,3 +1,6 @@
+http://127.0.0.1:8080/dev/index_RequireJS_no-optimize_tr_controls_only_lite.html?epub=..%2Fepub_content%2Faccessible_epub_3&goto=epubcfi(/6/20!/4/2%5Bbuilding_a_better_epub%5D/2/1:0)
+
+
 _Note: Please don't use the zip download feature on this repo as this repo uses submodules and this is not supported at present by github and will result in an incomplete copy of the repo._
 
 # readium-js-viewer
