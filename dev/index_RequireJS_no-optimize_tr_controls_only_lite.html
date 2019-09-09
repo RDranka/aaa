@@ -10,6 +10,7 @@
     <style>
         .library-item {
             height: 100px;
+
         }
 
         body:not(.list-view) .library-item .no-cover {
@@ -18,24 +19,36 @@
             font-size: 40px;
         }
     </style>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link href="../src/images/readium_favicon.png" rel="shortcut icon"/>
-    <link href="../src/images/readium-touch-icon.png" rel="apple-touch-icon"/>
+    <!-- link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:600' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css' -->
 
     <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap/dist/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../node_modules/bootstrap-accessibility-plugin/plugins/css/bootstrap-accessibility.css">
+    <link rel="stylesheet" type="text/css"
+          href="../node_modules/bootstrap-accessibility-plugin/plugins/css/bootstrap-accessibility.css">
 
     <link rel="stylesheet" type="text/css" href="../src/css/sourcesanspro.css">
     <link rel="stylesheet" type="text/css" href="../src/css/readium_js.css">
     <link rel="stylesheet" type="text/css" href="../src/css/viewer.css">
     <link rel="stylesheet" type="text/css" href="../src/css/viewer_audio.css">
     <link rel="stylesheet" type="text/css" href="../src/css/settings.css">
+    <link rel="stylesheet" type="text/css" href="../src/css/library.css">
 
-    <script type="text/javascript" src="../build-output/_single-bundle/readium-js-viewer_all_LITE.js"> </script>
-    <script type="text/javascript" src="./RequireJS_config.js"> </script>
-    <script type="text/javascript" src="../src/js/mobile_commands/Mobile_commands.js"></script>
+    <!--    <script type="text/javascript" src="../readium-js/readium-shared-js/node_modules/requirejs/require.js"></script>-->
+
+    <!--    <script type="text/javascript" src="../build-config/RequireJS_config_browser.js"></script>-->
+    <!--    <script type="text/javascript" src="../readium-js/build-config/RequireJS_config_common.js"></script>-->
+    <!--    <script type="text/javascript"-->
+    <!--            src="../readium-js/readium-shared-js/build-config/RequireJS_config_common.js"></script>-->
+    <!--    <script type="text/javascript" src="../build-config/RequireJS_config_common.js"></script>-->
+
+    <!--    <script type="text/javascript"-->
+    <!--            src="../readium-js/readium-shared-js/build-config/RequireJS_config_plugins.js"></script>-->
+
+
+    <!--    <script type="text/javascript" src="../src/fonts/fonts.js"></script>-->
+
+    <!--    <script type="text/javascript" src="./RequireJS_config.js"></script>-->
+    <script src="../build-output/_single-bundle/readium-js-viewer_all_LITE.js"></script>
 
 
     <script type="text/javascript">
@@ -43,64 +56,96 @@
         require(["readium_shared_js/globalsSetup"], function () {
             require(["jquery"], function ($) {
 
-                $("#next-button").on("click", function () {
-                    if (hasNextPage()) {
-                        nextPage();
-                    }
-                });
 
-                $("#prev-button").on("click", function () {
-                    if (hasPrevPage()) {
-                        prevPage();
-                    }
-                });
+                    require(["readium_js_viewer/TreineticEpubReader"], function (TreineticEpubReader) {
 
-                $("#bookmark").on("click", function () {
-                    makeBookmark();
-                });
+                        var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5ZWQ4ZmNiMDUwNTkxMWU5YWZiNDBmYzU4ZmM2YzY4YSIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3QvRVBVQl9CQUNLRU5EL3B1YmxpYy9hcGkvdjEuMC9sb2dpbiIsImlhdCI6MTU2NzkyOTU5MCwiZXhwIjoxNTY4NTM0MzkwLCJuYmYiOjE1Njc5Mjk1OTAsImp0aSI6IldrS2ZaYlROemFBWWdMMEsifQ.t6sskXKeEdgbd0Zq4WEa7SsVX_02bbwNykYXnXfFzTo";
 
-                $("#font_size").on("change", function () {
-                    setFontSize(parseInt($(this).val()));
-                });
-                $("#page_width").on("change", function () {
-                    changeColumnMaxWidth(parseInt($(this).val()));
-                });
+                        var exControls = TreineticEpubReader.handler();
+                        exControls.registerEvent("onEpubLoadSuccess", function () {
+                            epubLoaded(exControls);
+                        });
 
-                $("#theme_list").on("change", function () {
-                    setTheme($(this).val());
-                });
+                        exControls.registerEvent("onEpubLoadFail", function () {
+                            console.log("EpubLoad Failed");
+                        });
 
-                $("#scrolling_mode").on("change", function () {
-                    setScrollMode($(this).val());
-                });
-
-                $("#display_format").on("change", function () {
-                    setDisplayFormat($(this).val());
-                });
+                        exControls.registerEvent("onTOCLoaded", function (hasTOC) {
+                            var message = {
+                                hasTOC: hasTOC,
+                                toc: []
+                            };
+                            if (!hasTOC) {
+                                message.toc = JSON.parse(getTOCJson());
+                            }
+                            onTOCLoaded(message.hasTOC, exControls);
+                        });
 
 
-                require(["readium_js_viewer/TreineticViewerLite"], function () {
-                });
+                        //TreineticEpubReader.loadUI({epub: "http://192.168.1.7/EPUB_BACKEND/public/api/v1.0/epub/preview/beed91406cd211e9a4c1ebdd16a6730e?token=" + token});
+                        var config = TreineticEpubReader.config();
+                        config.jsLibRoot = "../build-output/";
+                        TreineticEpubReader.loadUI({epub: "../epub_content/robinhood.epub"});
+                        registerAllUIEvents(exControls);
+
+                    });
             });
         });
 
-        registerEvent("onEpubLoadSuccess", function () {
-            $("#font_size").attr("min", getRecommendedFontSizeRange().min);
-            $("#font_size").attr("max", getRecommendedFontSizeRange().max);
-            $("#page_width").attr("min", getRecommendedColumnMaxWidthRange().min);
-            $("#page_width").attr("max", getRecommendedColumnMaxWidthRange().max);
+        function registerAllUIEvents(etc) {
+            $("#next-button").on("click", function () {
+                if (etc.hasNextPage()) {
+                    etc.nextPage();
+                }
+            });
 
-            var list = getAvailableThemes();
+            $("#prev-button").on("click", function () {
+                if (etc.hasPrevPage()) {
+                    etc.prevPage();
+                }
+            });
+
+            $("#bookmark").on("click", function () {
+                etc.makeBookMark();
+            });
+
+            $("#font_size").on("change", function () {
+                etc.changeFontSize(parseInt($(this).val()));
+            });
+            $("#page_width").on("change", function () {
+                etc.changeColumnMaxWidth(parseInt($(this).val()));
+            });
+
+            $("#theme_list").on("change", function () {
+                etc.setTheme($(this).val());
+            });
+
+            $("#scrolling_mode").on("change", function () {
+                etc.setScrollMode($(this).val());
+            });
+
+            $("#display_format").on("change", function () {
+                etc.setDisplayFormat($(this).val());
+            });
+        }
+
+        function epubLoaded(extcontrols) {
+            $("#font_size").attr("min", extcontrols.getRecommendedFontSizeRange().min);
+            $("#font_size").attr("max", extcontrols.getRecommendedFontSizeRange().max);
+            $("#page_width").attr("min", extcontrols.getRecommendedColumnWidthRange().min);
+            $("#page_width").attr("max", extcontrols.getRecommendedColumnWidthRange().max);
+
+            var list = extcontrols.getAvailableThemes();
             list.some(function (item) {
                 $("#theme_list").append(`<option value="${item.id}" >${item.name}</option>`);
             });
 
-            var list = getAvailableScrollModes();
+            var list = extcontrols.getAvailableScrollModes();
             list.some(function (item) {
                 $("#scrolling_mode").append(`<option value="${item.id}" >${item.name}</option>`);
             });
 
-            var list = getAvailableDisplayFormats();
+            var list = extcontrols.getAvailableDisplayFormats();
             list.some(function (item) {
                 $("#display_format").append(`<option value="${item.id}" >${item.name}</option>`);
             });
@@ -115,27 +160,23 @@
             syntheticSpread: "auto"
             theme: "default-theme"
             * */
-            var settings = getCurrentReaderSettings();
+            var settings = extcontrols.getCurrentReaderSettings();
             $("#page_width").val(settings.columnGap); //NEED TO REVISE
             $("#font_size").val(settings.fontSize);
             $("#theme_list").val(settings.theme);
             $("#scrolling_mode").val(settings.scroll);
             $("#display_format").val(settings.syntheticSpread);
 
-        });
+        }
 
-        registerEvent("onEpubLoadFail", function () {
 
-        });
-
-        registerEvent("onTOCLoaded", function (hasTOC) {
+        function onTOCLoaded(hasTOC, extcontrols) {
             if (hasTOC) {
-                var toc = getTOCJson();
-                console.log(toc);
+                var toc = extcontrols.getTOCJson();
                 $('.customTOC').empty();
                 $('.customTOC').append($(crateOL_Recursively(JSON.parse(toc))));
             }
-        });
+        }
 
         function crateOL_Recursively(json) {
             var string = "<ol>";

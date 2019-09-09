@@ -1,6 +1,5 @@
-define(['./TOCJsonCreator', 'Settings' , './TreineticHelpers'], function (TOCJsonCreator, Settings, TreineticHelpers) {
+define(['./TOCJsonCreator', 'Settings', './TreineticHelpers'], function (TOCJsonCreator, Settings, TreineticHelpers) {
     var externalcontrols = null;
-
 
     var ExternalControls = function () {
         this.metadata = null;
@@ -10,10 +9,10 @@ define(['./TOCJsonCreator', 'Settings' , './TreineticHelpers'], function (TOCJso
         this.TocJsonObject = null;
         this.currentPackageDocument = null;
         this.readerSettings = null;
+        this.callbackFunctions = {};
     };
 
     ExternalControls.prototype.epubLoaded = function (metadata, currentPackageDocument, reader) {
-        if (func_exists("onEpubLoadSuccess") && func_exists("onTOCLoaded")) {
             var self = this;
             this.metadata = metadata;
             this.reader = reader;
@@ -24,13 +23,19 @@ define(['./TOCJsonCreator', 'Settings' , './TreineticHelpers'], function (TOCJso
                 self.readerSettings = readerSettings;
             });
 
-            onEpubLoadSuccess(externalcontrols);
-        }
+            if(this.callbackFunctions["onEpubLoadSuccess"]){
+                this.callbackFunctions["onEpubLoadSuccess"]();
+            }
     };
 
+    ExternalControls.prototype.registerEvent = function (eventName,func) {
+        this.callbackFunctions[eventName] = func;
+    };
+
+
     ExternalControls.prototype.epubFailed = function (error) {
-        if (func_exists("onEpubLoadFail")) {
-            onEpubLoadFail(error);
+        if(this.callbackFunctions["onEpubLoadFail"]){
+            this.callbackFunctions["onEpubLoadFail"](error);
         }
     };
 
@@ -38,9 +43,11 @@ define(['./TOCJsonCreator', 'Settings' , './TreineticHelpers'], function (TOCJso
         this.channel = func;
     };
 
-    ExternalControls.prototype.onTOCLoad = function(tocJson){
+    ExternalControls.prototype.onTOCLoad = function (tocJson) {
         this.TocJsonObject = tocJson;
-        onTOCLoaded(this.TocJsonObject);
+        if(this.callbackFunctions["onTOCLoaded"]){
+            this.callbackFunctions["onTOCLoaded"](this.TocJsonObject);
+        }
     };
 
 
@@ -120,7 +127,7 @@ define(['./TOCJsonCreator', 'Settings' , './TreineticHelpers'], function (TOCJso
         TreineticHelpers.updateReader(this.reader, this.readerSettings);
     };
 
-    ExternalControls.prototype.getAvailableScrollOptions = function () {
+    ExternalControls.prototype.getAvailableScrollModes = function () {
         return [
             {name: "Automatic", id: "auto"},
             {name: "Scroll Document", id: "scroll-doc"},
@@ -176,6 +183,10 @@ define(['./TOCJsonCreator', 'Settings' , './TreineticHelpers'], function (TOCJso
                 externalcontrols = new ExternalControls();
             }
             return externalcontrols;
+        },
+
+        createInstance: function () {
+            externalcontrols = new ExternalControls();
         }
     }
 });

@@ -165,7 +165,6 @@ html[data-theme=night-theme] .modal
 }*/
 
 .navbar .icon-logo, .navbar .icon-logo:active{
-  background-image: url('../images/readium_logo.png');
   width: 130px; 
   background-size: auto 28px !important;
 }
@@ -387,18 +386,17 @@ html[data-theme=night-theme] #right-page-btn:hover
 }*/
 
 .embedded .icon-full-screen, .embedded .icon-full-screen:active{
-  background-image: url('../images/white-resize-full.png');
   background-size: 16px 16px;
 }
 
 .embedded .icon-full-screen:-webkit-full-screen-document{
-  background-image: url('../images/white-resize-small.png');
+
 }
 .embedded .icon-full-screen:-moz-full-screen{
-  background-image: url('../images/white-resize-small.png');
+
 }
 .embedded .icon-full-screen:fullscreen{
-  background-image: url('../images/white-resize-small.png');
+
 }
 
 /*.embedded .icon-settings, .embedded .icon-settings:active{
@@ -411,7 +409,6 @@ html[data-theme=night-theme] #right-page-btn:hover
 }
 
 .embedded .icon-toc, .embedded .icon-toc:active{
-  background-image: url('../images/white-list.png');
   background-size: 16px 16px;
 }
 .embedded #readium-toc-body{
@@ -450,7 +447,6 @@ html[data-theme=night-theme] #right-page-btn:hover
   text-shadow: none;
   position: fixed;
   width: 16px;
-  background: url('../images/white-chevron-up.png') no-repeat;
   background-size: 16px 11px;
   left: 9px;
   top: 5px;

@@ -49,6 +49,7 @@ define([
         setTimeout(function () {
             initReader("#epub-reader-frame", data);
         }, 0);
+        return ExternalControls.getInstance();
     }
 
     function initReader(reader_frame_element, data) {
@@ -94,7 +95,7 @@ define([
             if (!packageDocument) {
                 console.error("ERROR OPENING EBOOK: " + ebookURL_filepath);
                 spin(false);
-                ExternalControls.getInstance().epubFailed(Strings.err_epub_corrupt);
+                ExternalControls.getInstance().epubFailed("epubfailed");
                 return;
             }
             currentPackageDocument = packageDocument;
@@ -503,7 +504,13 @@ define([
 
     return {
         loadUI: init,
-        ensureUrlIsRelativeToApp : ensureUrlIsRelativeToApp
+        handler: function () {
+            return ExternalControls.getInstance();
+        },
+        config: function () {
+            return moduleConfig;
+        },
+        ensureUrlIsRelativeToApp: ensureUrlIsRelativeToApp
     }
 
 });
