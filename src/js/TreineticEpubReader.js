@@ -191,8 +191,13 @@ define([
         });
 
         var setTocSize = function () {
-            var appHeight = $(document.body).height() - $('#app-container')[0].offsetTop;
-            $('#app-container').height(appHeight);
+            var height = ExternalControls.getInstance().getReaderHeight();
+            if(height){
+                $('#app-container').height(height);
+            }else{
+                var appHeight = $(document.body).height() - $('#app-container')[0].offsetTop;
+                $('#app-container').height(appHeight);
+            }
         };
 
         $(window).on('resize', setTocSize);

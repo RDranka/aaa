@@ -32,7 +32,6 @@ define(['./TOCJsonCreator', 'Settings', './TreineticHelpers'], function (TOCJson
         this.callbackFunctions[eventName] = func;
     };
 
-
     ExternalControls.prototype.epubFailed = function (error) {
         if(this.callbackFunctions["onEpubLoadFail"]){
             this.callbackFunctions["onEpubLoadFail"](error);
@@ -48,6 +47,13 @@ define(['./TOCJsonCreator', 'Settings', './TreineticHelpers'], function (TOCJson
         if(this.callbackFunctions["onTOCLoaded"]){
             this.callbackFunctions["onTOCLoaded"](this.TocJsonObject);
         }
+    };
+
+    ExternalControls.prototype.getReaderHeight = function(){
+            if(this.callbackFunctions["onReaderHeightRequest"]){
+                return this.callbackFunctions["onReaderHeightRequest"]();
+            }
+            return null;
     };
 
 
