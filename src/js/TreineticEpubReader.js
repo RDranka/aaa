@@ -195,8 +195,10 @@ define([
             if(height){
                 $('#app-container').height(height);
             }else{
-                var appHeight = $(document.body).height() - $('#app-container')[0].offsetTop;
-                $('#app-container').height(appHeight);
+                if($('#app-container').length > 0){
+                    var appHeight = $(document.body).height() - $('#app-container')[0].offsetTop;
+                    $('#app-container').height(appHeight);
+                }
             }
         };
 
