@@ -14,29 +14,38 @@
 
 require.config({
 
+    wrapShim: true,
+
     baseUrl: process._RJS_baseUrl(2),
 
-    name: "readium-js-viewer_all_LITE",
+    name: "TreineticEpubReader",
 
     // relative to this config file (not baseUrl)
-    out: "../build-output/_single-bundle/readium-js-viewer_all_LITE.js",
+    out: "../build-output/_single-bundle/TreineticEpubReader.js",
 
     include: [
-      "readium_js_viewer/TreineticViewerLite"
+        "readium_js_viewer/TreineticEpubReader"
     ],
+
+    exclude: ["jquery","bootstrap"],
 
     insertRequire: [
-      "readium_js_viewer/TreineticViewerLite"
+        "readium_js_viewer/TreineticEpubReader"
     ],
 
-    stubModules: ['hgn', 'i18n'],
+    "wrap": {
+        "startFile": "..wrap.start",
+        "endFile": "wrap.end"
+    },
 
-    paths:
-    {
+    // stubModules: ['hgn', 'i18n'],
+
+    paths: {
         "version":
             process._RJS_rootDir(2) + '/build-output/version',
 
-        "readium-js-viewer_all_LITE":
+        "TreineticEpubReader":
             process._RJS_rootDir(2) + '/readium-js/readium-shared-js/node_modules/almond/almond'
     }
+
 });

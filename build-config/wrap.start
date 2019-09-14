@@ -1,0 +1,12 @@
+(function (root, factory) {
+
+  alert("hi")
+
+  if (typeof define === 'function' && define.amd) {
+    // AMD.
+    define(['jquery'], factory);
+  } else {
+    // Browser globals.
+    root.TreineticEpubReader = factory(root.$);
+  }
+}(this, function($) {

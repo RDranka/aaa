@@ -57,7 +57,7 @@
     "bootstrap-accessibility-plugin": "github:paypal/bootstrap-accessibility-plugin#master",
     "chai": "3.x",
     "chai-as-promised": "^7.1.1",
-    "clean-css-cli": "^4.1.10",
+    "clean-css-cli": "^4.3.0",
     "crx": "^3.2.1",
     "decompress-zip": "^0.3.2",
     "gift": "^0.10.1",
@@ -73,13 +73,13 @@
     "mathjax-single-file": "github:danielweck/MathJax-single-file#master",
     "mocha": "^5.2.0",
     "phantomjs-prebuilt": "^2.1.16",
-    "remotestoragejs": "^1.0.3",
+    "remotestoragejs": "^1.2.2",
     "requirejs-hogan-plugin": "^0.3.1",
-    "screenfull": "^3.3.2",
+    "screenfull": "^3.3.3",
     "spin.js": "2.x",
-    "uglify-js": "^3.4.1",
+    "uglify-js": "^3.6.0",
     "wd": "^1.11.4",
-    "xml2js": "^0.4.19"
+    "xml2js": "^0.4.22"
   },
   "scripts": {
     "cson2json": "node ./readium-js/readium-shared-js/readium-build-tools/concat.js \"package/*.cson\" package.cson && node ./readium-js/readium-shared-js/node_modules/cson/bin/cson2json package.cson > package.json && node ./readium-js/readium-shared-js/node_modules/rimraf/bin.js package.cson && node readium-js/readium-shared-js/readium-build-tools/optimizePackageJsonScripts.js",

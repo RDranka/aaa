@@ -22,11 +22,11 @@ require.config({
     out: "../build-output/_single-bundle/readium-js-viewer_all_Tr_LITE",
 
     include: [
-      "readium_js_viewer/TreineticViewerLite"
+      "readium_js_viewer/ReadiumViewerLite"
     ],
 
     insertRequire: [
-      "readium_js_viewer/TreineticViewerLite"
+      "readium_js_viewer/ReadiumViewerLite"
     ],
 
     stubModules: ['hgn', 'i18n'],

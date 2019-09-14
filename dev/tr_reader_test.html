@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html id="simpleViewer">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <link rel="stylesheet" type="text/css" href="../../node_modules/bootstrap/dist/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css"
+          href="../../node_modules/bootstrap-accessibility-plugin/plugins/css/bootstrap-accessibility.css">
+
+    <link rel="stylesheet" type="text/css" href="../src/css/sourcesanspro.css">
+    <link rel="stylesheet" type="text/css" href="../src/css/readium_js.css">
+    <link rel="stylesheet" type="text/css" href="../src/css/viewer.css">
+    <link rel="stylesheet" type="text/css" href="../src/css/viewer_audio.css">
+    <link rel="stylesheet" type="text/css" href="../src/css/settings.css">
+    <!-- link rel="stylesheet" type="text/css" href="../src/css/library.css" -->
+
+
+<!--    <script src="../readium-js/readium-shared-js/node_modules/eventemitter3/umd/eventemitter3.min.js"></script>-->
+
+
+<!--    <script type="text/javascript" src="../readium-js/readium-shared-js/node_modules/requirejs/require.js"></script>-->
+
+
+<!--    <script type="text/javascript" src="../build-output/_multiple-bundles/readium-external-libs.js"></script>-->
+
+<!--    <script type="text/javascript" src="../build-output/_multiple-bundles/readium-shared-js.js"></script>-->
+
+<!--    <script type="text/javascript" src="../build-output/_multiple-bundles/readium-plugin-example.js"></script>-->
+
+<!--    <script type="text/javascript" src="../build-output/_multiple-bundles/readium-plugin-annotations.js"></script>-->
+
+<!--    <script type="text/javascript" src="../build-output/_multiple-bundles/readium-plugin-highlights.js"></script>-->
+
+<!--    <script type="text/javascript" src="../build-output/_multiple-bundles/readium-js.js"></script>-->
+
+<!--    <script type="text/javascript" src="../build-output/_multiple-bundles/readium-js-viewer.js"></script>-->
+
+
+    <script type="text/javascript" src="../build-output/_single-bundle/TreineticEpubReader.js"></script>
+
+    <script>
+        window.process = undefined;
+        require(["readium_shared_js/globalsSetup"], function () {
+            require(["jquery"], function ($) {
+
+
+                require(["readium_js_viewer/TreineticEpubReader"], function (TreineticEpubReader) {
+
+                    var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5ZWQ4ZmNiMDUwNTkxMWU5YWZiNDBmYzU4ZmM2YzY4YSIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3QvRVBVQl9CQUNLRU5EL3B1YmxpYy9hcGkvdjEuMC9sb2dpbiIsImlhdCI6MTU2NzkyOTU5MCwiZXhwIjoxNTY4NTM0MzkwLCJuYmYiOjE1Njc5Mjk1OTAsImp0aSI6IldrS2ZaYlROemFBWWdMMEsifQ.t6sskXKeEdgbd0Zq4WEa7SsVX_02bbwNykYXnXfFzTo";
+
+                    var exControls = TreineticEpubReader.handler();
+                    exControls.registerEvent("onEpubLoadSuccess", function () {
+                        epubLoaded(exControls);
+                    });
+
+                    exControls.registerEvent("onEpubLoadFail", function () {
+                        console.log("EpubLoad Failed");
+                    });
+
+                    exControls.registerEvent("onTOCLoaded", function (hasTOC) {
+                        var message = {
+                            hasTOC: hasTOC,
+                            toc: []
+                        };
+                        if (!hasTOC) {
+                            message.toc = JSON.parse(getTOCJson());
+                        }
+                        onTOCLoaded(message.hasTOC, exControls);
+                    });
+
+
+                    //TreineticEpubReader.loadUI({epub: "http://192.168.1.7/EPUB_BACKEND/public/api/v1.0/epub/preview/beed91406cd211e9a4c1ebdd16a6730e?token=" + token});
+                    var config = TreineticEpubReader.config();
+                    config.jsLibRoot = "../build-output/";
+                    TreineticEpubReader.loadUI({epub: "../epub_content/robinhood.epub"});
+                    registerAllUIEvents(exControls);
+
+                });
+            });
+        });
+
+        function registerAllUIEvents(etc) {
+            $("#next-button").on("click", function () {
+                if (etc.hasNextPage()) {
+                    etc.nextPage();
+                }
+            });
+
+            $("#prev-button").on("click", function () {
+                if (etc.hasPrevPage()) {
+                    etc.prevPage();
+                }
+            });
+
+            $("#bookmark").on("click", function () {
+                etc.makeBookMark();
+            });
+
+            $("#font_size").on("change", function () {
+                etc.changeFontSize(parseInt($(this).val()));
+            });
+            $("#page_width").on("change", function () {
+                etc.changeColumnMaxWidth(parseInt($(this).val()));
+            });
+
+            $("#theme_list").on("change", function () {
+                etc.setTheme($(this).val());
+            });
+
+            $("#scrolling_mode").on("change", function () {
+                etc.setScrollMode($(this).val());
+            });
+
+            $("#display_format").on("change", function () {
+                etc.setDisplayFormat($(this).val());
+            });
+        }
+
+        function epubLoaded(extcontrols) {
+            $("#font_size").attr("min", extcontrols.getRecommendedFontSizeRange().min);
+            $("#font_size").attr("max", extcontrols.getRecommendedFontSizeRange().max);
+            $("#page_width").attr("min", extcontrols.getRecommendedColumnWidthRange().min);
+            $("#page_width").attr("max", extcontrols.getRecommendedColumnWidthRange().max);
+
+            var list = extcontrols.getAvailableThemes();
+            list.some(function (item) {
+                $("#theme_list").append(`<option value="${item.id}" >${item.name}</option>`);
+            });
+
+            var list = extcontrols.getAvailableScrollModes();
+            list.some(function (item) {
+                $("#scrolling_mode").append(`<option value="${item.id}" >${item.name}</option>`);
+            });
+
+            var list = extcontrols.getAvailableDisplayFormats();
+            list.some(function (item) {
+                $("#display_format").append(`<option value="${item.id}" >${item.name}</option>`);
+            });
+
+            /*
+            columnGap: 60 --->
+            columnMaxWidth: 550
+            columnMinWidth: 400
+            fontSelection: 0
+            fontSize: 100 --->
+            scroll: "auto"
+            syntheticSpread: "auto"
+            theme: "default-theme"
+            * */
+            var settings = extcontrols.getCurrentReaderSettings();
+            $("#page_width").val(settings.columnGap); //NEED TO REVISE
+            $("#font_size").val(settings.fontSize);
+            $("#theme_list").val(settings.theme);
+            $("#scrolling_mode").val(settings.scroll);
+            $("#display_format").val(settings.syntheticSpread);
+
+        }
+
+
+        function onTOCLoaded(hasTOC, extcontrols) {
+            if (hasTOC) {
+                var toc = extcontrols.getTOCJson();
+                $('.customTOC').empty();
+                $('.customTOC').append($(crateOL_Recursively(JSON.parse(toc))));
+            }
+        }
+
+        function crateOL_Recursively(json) {
+            var string = "<ol>";
+            json.some(function (item) {
+                string += `<li><a onclick="navgigateToPage('${item.Id_link}')">${item.name}</a>`;
+                if (item.sub.length > 0) {
+                    string += crateOL_Recursively(item.sub);
+                }
+                string += "</li>";
+            });
+            return string + "</ol>";
+        }
+
+        function navgigateToPage(href) {
+            goToPage(href)
+        }
+    </script>
+
+</head>
+
+<!-- This is all application-specific HTML -->
+<body style="overflow: scroll">
+<div style="color: black">
+    <button id="prev-button">previous</button>
+    <button id="next-button">next</button>
+    <button id="bookmark">bookmark</button>
+    Font Sizing
+    <input type="range" id="font_size" min="0" max="10">
+    Page Width
+    <input type="range" id="page_width" min="0" max="10">
+    <select id="theme_list"></select>
+    <select id="scrolling_mode"></select>
+    <select id="display_format"></select>
+</div>
+<table style="width:100%; height:100%">
+    <tr>
+        <td width="20%">
+            <div class="customTOC"></div>
+        </td>
+        <td width="80%" style="position: relative">
+            <div id="app-container">
+                <div id="reading-area" role="main">
+                    <div id="epub-reader-container">
+                        <div id="epub-reader-frame">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+</body>
