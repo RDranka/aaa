@@ -62,6 +62,11 @@
     "decompress-zip": "^0.3.2",
     "gift": "^0.10.1",
     "github": "12.x",
+    "grunt": "^1.0.4",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-cssmin": "^3.0.0",
+    "grunt-contrib-uglify": "^4.0.1",
+    "grunt-contrib-uglify-es": "^3.3.0",
     "grunt-selenium-webdriver": "github:levexis/grunt-selenium-webdriver#master",
     "hammerjs": "^2.0.8",
     "hogan": "^1.0.2",
@@ -154,6 +159,7 @@
     "deploy:cloudReader:copy:epub_content": "node ./readium-js/readium-shared-js/node_modules/ncp/bin/ncp epub_content/ dist/cloud-reader/epub_content/",
     "deploy:cloudReader:copy:sourcemap": "node ./readium-js/readium-shared-js/node_modules/ncp/bin/ncp dist/cloud-reader_sourcemap/ dist/cloud-reader/scripts/ && ( node ./readium-js/readium-shared-js/node_modules/ncp/bin/ncp dist/zip_sourcemap/ dist/cloud-reader/scripts/zip/ || echo \"=== SUCCESS [ignore previous error]: no sourcemaps were generated for zip web-worker, deflate, inflate (no uglification).\" )",
     "deploy:cloudReaderLite:copy:sourcemap": "node ./readium-js/readium-shared-js/node_modules/ncp/bin/ncp dist/cloud-reader-lite_sourcemap/ dist/cloud-reader-lite/scripts/ && ( node ./readium-js/readium-shared-js/node_modules/ncp/bin/ncp dist/zip_sourcemap/ dist/cloud-reader-lite/scripts/zip/ || echo \"=== SUCCESS [ignore previous error]: no sourcemaps were generated for zip web-worker, deflate, inflate (no uglification).\" )",
+    "tr_single_file_build": "npm run versioning && npm run build:scripts:single:LITE",
     "tr_build": "./tr_build.sh"
   }
 }

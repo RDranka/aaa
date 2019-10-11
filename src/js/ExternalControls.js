@@ -178,7 +178,7 @@ define(['./TOCJsonCreator', 'Settings', './TreineticHelpers'], function (TOCJson
     }
 
     function cloneUpdate(object, attr, value) {
-        let newObject = JSON.parse(JSON.stringify(object));
+        var newObject = JSON.parse(JSON.stringify(object));
         newObject[attr] = value;
         return newObject;
     }

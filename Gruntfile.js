@@ -8,9 +8,8 @@ module.exports = function (grunt) {
             },
             minify_js: {
                 files: {
-                    './dist/treinetic_readium_viewer.min.js': [
-                        '../../build-output/_single-bundle/readium-js-viewer_all_LITE.js',
-                        '../../src/js/mobile_commands/init_reader.js'
+                    './dist/TreineticEpubReader.min.js': [
+                        'build-output/_single-bundle/TreineticEpubReader.js'
                     ]
                 }
             }
@@ -23,12 +22,12 @@ module.exports = function (grunt) {
             },
             minify_css: {
                 files: {
-                    './dist/treinetic_readium_viewer.min.css': [
-                        '../../src/css/Tr_style.css',
-                        '../../src/css/sourcesanspro.css',
-                        '../../src/css/readium_js.css',
-                        '../../src/css/viewer.css',
-                        '../../src/css/viewer_audio.css',
+                    './dist/TreineticEpubReader.min.css': [
+                        'src/css/Tr_style.css',
+                        'src/css/sourcesanspro.css',
+                        'src/css/readium_js.css',
+                        'src/css/viewer.css',
+                        'src/css/viewer_audio.css',
                     ]
                 }
             }
@@ -39,22 +38,22 @@ module.exports = function (grunt) {
                     {expand: true, src: ['index.html'], dest: 'dist/'},
                     {expand: true, src: ['Readme.md'], dest: 'dist/'},
                     {
-                        cwd : '../../epub_content',
+                        cwd : 'epub_content',
                         expand: true,
                         src: ['accessible_epub_3/**', ],
-                        dest: 'dist/epub_content/accessible_epub_3'
+                        dest: './dist/epub_content/accessible_epub_3'
                     },
                     {
-                        cwd : '../../epub_content',
+                        cwd : 'epub_content',
                         expand: true,
                         src: ['robinhood.epub'],
-                        dest: 'dist/epub_content/'
+                        dest: './dist/epub_content/'
                     },
                     {
-                        cwd : '../../build-output/',
+                        cwd : 'build-output/',
                         expand: true,
                         src: ['deflate.js', 'inflate.js', 'z-worker.js'],
-                        dest: 'dist/ZIPJS/'
+                        dest: './dist/ZIPJS/'
                     },
                 ],
             },

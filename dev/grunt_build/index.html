@@ -3,18 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<!--    <link rel="stylesheet" type="text/css" href="../../node_modules/bootstrap/dist/css/bootstrap.css">-->
-<!--    <link rel="stylesheet" type="text/css"-->
-<!--          href="../../node_modules/bootstrap-accessibility-plugin/plugins/css/bootstrap-accessibility.css">-->
-
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <link rel="stylesheet" type="text/css" href="treinetic_readium_viewer.min.css">
     <script type="text/javascript" src="treinetic_readium_viewer.min.js"></script>
-
-
-
-
-
 </head>
 
 <!-- This is all application-specific HTML -->
@@ -34,8 +25,6 @@
 
 
     function onLoad(){
-        var token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI5ZWQ4ZmNiMDUwNTkxMWU5YWZiNDBmYzU4ZmM2YzY4YSIsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3QvRVBVQl9CQUNLRU5EL3B1YmxpYy9hcGkvdjEuMC9sb2dpbiIsImlhdCI6MTU2NzkyOTU5MCwiZXhwIjoxNTY4NTM0MzkwLCJuYmYiOjE1Njc5Mjk1OTAsImp0aSI6IldrS2ZaYlROemFBWWdMMEsifQ.t6sskXKeEdgbd0Zq4WEa7SsVX_02bbwNykYXnXfFzTo";
-
         var exControls = TreineticEpubReader.handler();
         exControls.registerEvent("onEpubLoadSuccess", function () {
             epubLoaded(exControls);
@@ -56,8 +45,9 @@
             onTOCLoaded(message.hasTOC,exControls);
         });
 
-
-        TreineticEpubReader.loadUI({epub: "../epub_content/robinhood.epub"});
+        var config = TreineticEpubReader.config();
+        config.jsLibRoot = "./ZIPJS/";
+        TreineticEpubReader.loadUI({epub: "epub_content/robinhood.epub"});
         registerAllUIEvents(exControls);
 
         function registerAllUIEvents(etc) {

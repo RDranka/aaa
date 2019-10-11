@@ -33,12 +33,12 @@ require.config({
         "readium_js_viewer/TreineticEpubReader"
     ],
 
-    "wrap": {
-        "startFile": "..wrap.start",
+    wrap: {
+        "startFile": "wrap.start",
         "endFile": "wrap.end"
     },
 
-    // stubModules: ['hgn', 'i18n'],
+    optimize: "uglify",
 
     paths: {
         "version":
@@ -46,6 +46,8 @@ require.config({
 
         "TreineticEpubReader":
             process._RJS_rootDir(2) + '/readium-js/readium-shared-js/node_modules/almond/almond'
-    }
+    },
+
+
 
 });
