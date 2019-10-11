@@ -35,8 +35,8 @@ module.exports = function (grunt) {
         copy: {
             main: {
                 files: [
-                    {expand: true, src: ['dev/grunt_build/index.html'], dest: 'dist/'},
-                    {expand: true, src: ['dev/grunt_build/Readme.md'], dest: 'dist/'},
+                    {cwd : 'dev/grunt_build', expand: true, src: ['index.html'], dest: 'dist/'},
+                    {cwd : 'dev/grunt_build', expand: true, src: ['Readme.md'], dest: 'dist/'},
                     {
                         cwd : 'epub_content',
                         expand: true,
