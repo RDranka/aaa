@@ -1,7 +1,6 @@
 .history
 api-docs
 build-output
-dist
 .idea
 .DS_Store
 .divshot-cache

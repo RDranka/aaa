@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="TreineticEpubReader.min.css">
+    <script type="text/javascript" src="TreineticEpubReader.min.js"></script>
+</head>
+
+<!-- This is all application-specific HTML -->
+<body>
+<div id="app-container">
+    <div id="reading-area" role="main">
+        <div id="epub-reader-container">
+            <div id="epub-reader-frame">
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+
+
+
+    function onLoad(){
+        var exControls = TreineticEpubReader.handler();
+        exControls.registerEvent("onEpubLoadSuccess", function () {
+            epubLoaded(exControls);
+        });
+
+        exControls.registerEvent("onEpubLoadFail", function () {
+            console.log("EpubLoad Failed");
+        });
+
+        exControls.registerEvent("onTOCLoaded", function (hasTOC) {
+            var message = {
+                hasTOC: hasTOC,
+                toc: []
+            };
+            if (!hasTOC) {
+                message.toc = JSON.parse(getTOCJson());
+            }
+            onTOCLoaded(message.hasTOC,exControls);
+        });
+
+        var config = TreineticEpubReader.config();
+        config.jsLibRoot = "./ZIPJS/";
+        TreineticEpubReader.loadUI({epub: "epub_content/robinhood.epub"});
+        registerAllUIEvents(exControls);
+
+        function registerAllUIEvents(etc) {
+            $("#next-button").on("click", function () {
+                if (etc.hasNextPage()) {
+                    etc.nextPage();
+                }
+            });
+
+            $("#prev-button").on("click", function () {
+                if (etc.hasPrevPage()) {
+                    etc.prevPage();
+                }
+            });
+
+            $("#bookmark").on("click", function () {
+                etc.makeBookMark();
+            });
+
+            $("#font_size").on("change", function () {
+                etc.changeFontSize(parseInt($(this).val()));
+            });
+            $("#page_width").on("change", function () {
+                etc.changeColumnMaxWidth(parseInt($(this).val()));
+            });
+
+            $("#theme_list").on("change", function () {
+                etc.setTheme($(this).val());
+            });
+
+            $("#scrolling_mode").on("change", function () {
+                etc.setScrollMode($(this).val());
+            });
+
+            $("#display_format").on("change", function () {
+                etc.setDisplayFormat($(this).val());
+            });
+        }
+
+        function epubLoaded(extcontrols) {
+            $("#font_size").attr("min", extcontrols.getRecommendedFontSizeRange().min);
+            $("#font_size").attr("max", extcontrols.getRecommendedFontSizeRange().max);
+            $("#page_width").attr("min", extcontrols.getRecommendedColumnWidthRange().min);
+            $("#page_width").attr("max", extcontrols.getRecommendedColumnWidthRange().max);
+
+            var list = extcontrols.getAvailableThemes();
+            list.some(function (item) {
+                $("#theme_list").append(`<option value="${item.id}" >${item.name}</option>`);
+            });
+
+            var list = extcontrols.getAvailableScrollModes();
+            list.some(function (item) {
+                $("#scrolling_mode").append(`<option value="${item.id}" >${item.name}</option>`);
+            });
+
+            var list = extcontrols.getAvailableDisplayFormats();
+            list.some(function (item) {
+                $("#display_format").append(`<option value="${item.id}" >${item.name}</option>`);
+            });
+
+            /*
+            columnGap: 60 --->
+            columnMaxWidth: 550
+            columnMinWidth: 400
+            fontSelection: 0
+            fontSize: 100 --->
+            scroll: "auto"
+            syntheticSpread: "auto"
+            theme: "default-theme"
+            * */
+            var settings = extcontrols.getCurrentReaderSettings();
+            $("#page_width").val(settings.columnGap); //NEED TO REVISE
+            $("#font_size").val(settings.fontSize);
+            $("#theme_list").val(settings.theme);
+            $("#scrolling_mode").val(settings.scroll);
+            $("#display_format").val(settings.syntheticSpread);
+
+        }
+
+
+        function onTOCLoaded(hasTOC, extcontrols) {
+            if (hasTOC) {
+                var toc = extcontrols.getTOCJson();
+                $('.customTOC').empty();
+                $('.customTOC').append($(crateOL_Recursively(JSON.parse(toc))));
+            }
+        }
+
+        function crateOL_Recursively(json) {
+            var string = "<ol>";
+            json.some(function (item) {
+                string += `<li><a onclick="navgigateToPage('${item.Id_link}')">${item.name}</a>`;
+                if (item.sub.length > 0) {
+                    string += crateOL_Recursively(item.sub);
+                }
+                string += "</li>";
+            });
+            return string + "</ol>";
+        }
+
+        function navgigateToPage(href) {
+            goToPage(href)
+        }
+    }
+
+    setTimeout(function () {
+        onLoad();
+    },1000);
+
+
+</script>
+
+
+</body>
+
+</html>
