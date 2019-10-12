@@ -1,6 +1,6 @@
 {
   "name": "@treinetic/treinetic-epub-reader",
-  "version": "0.40.2",
+  "version": "1.0.0",
   "engines": {
     "node": ">=4",
     "npm": ">=2",
