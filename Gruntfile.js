@@ -15,42 +15,54 @@ module.exports = function (grunt) {
             }
         },
 
+        concat: {
+            libcss: {
+                src: [
+                    'src/css/Tr_style.css',
+                    'src/css/sourcesanspro.css',
+                    'src/css/readium_js.css',
+                    'src/css/viewer.css',
+                    'src/css/viewer_audio.css'
+                ],
+                dest: './dist/TreineticEpubReader.css',
+            },
+        },
+
         cssmin: {
             options: {
                 mergeIntoShorthands: false,
                 roundingPrecision: -1
             },
             minify_css: {
-                files: {
-                    './dist/TreineticEpubReader.min.css': [
-                        'src/css/Tr_style.css',
-                        'src/css/sourcesanspro.css',
-                        'src/css/readium_js.css',
-                        'src/css/viewer.css',
-                        'src/css/viewer_audio.css',
-                    ]
-                }
+                files: [{
+                    expand: true,
+                    cwd: './dist/',
+                    src: ['TreineticEpubReader.css'],
+                    dest: './dist/',
+                    ext: '.min.css'
+                }]
             }
         },
         copy: {
             main: {
                 files: [
-                    {cwd : 'dev/grunt_build', expand: true, src: ['index.html'], dest: 'dist/'},
-                    {cwd : 'dev/grunt_build', expand: true, src: ['Readme.md'], dest: 'dist/'},
+                    {cwd: 'build-output/_single-bundle', expand: true, src: ['TreineticEpubReader.js'], dest: 'dist/'},
+                    {cwd: 'dev/grunt_build', expand: true, src: ['index.html'], dest: 'dist/'},
+                    {cwd: 'dev/grunt_build', expand: true, src: ['Readme.md'], dest: 'dist/'},
                     {
-                        cwd : 'epub_content',
+                        cwd: 'epub_content',
                         expand: true,
-                        src: ['accessible_epub_3/**', ],
+                        src: ['accessible_epub_3/**',],
                         dest: './dist/epub_content/accessible_epub_3'
                     },
                     {
-                        cwd : 'epub_content',
+                        cwd: 'epub_content',
                         expand: true,
                         src: ['robinhood.epub'],
                         dest: './dist/epub_content/'
                     },
                     {
-                        cwd : 'build-output/',
+                        cwd: 'build-output/',
                         expand: true,
                         src: ['deflate.js', 'inflate.js', 'z-worker.js'],
                         dest: './dist/ZIPJS/'
@@ -62,9 +74,9 @@ module.exports = function (grunt) {
 
 
     //ZIPJS --> deflate.js inflate.js z-worker.js
-    grunt.registerTask("build", ["uglify:minify_js", "cssmin:minify_css", "copy:main"]);
+    grunt.registerTask("build", ["copy:main", "concat:libcss" , "cssmin:minify_css" , "uglify:minify_js"]);
 
-
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-cssmin');
     grunt.loadNpmTasks('grunt-contrib-uglify-es');

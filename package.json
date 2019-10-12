@@ -1,12 +1,12 @@
 {
   "name": "@treinetic/treinetic-epub-reader",
-  "version": "0.40.0",
+  "version": "0.40.2",
   "engines": {
     "node": ">=4",
     "npm": ">=2",
     "yarn": ">=0.23"
   },
-  "description": "Treinetic epub reader is a fork of popular readium epub reader and customized for the simplicity",
+  "description": "Treinetic epub reader is a fork of popular readium/readium-js-viewer and customized for the simplicity",
   "keywords": [
     "treinetic",
     "epub",
@@ -34,14 +34,10 @@
     "url": "git@github.com:Treinetic/TreineticEpubReader.git"
   },
   "files": [
-    "build-output/",
-    "dev/",
     "dist/",
-    "license.txt",
     "README.md"
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "JSON2": "^0.1.0",
     "bootstrap": "^3.4.1",
@@ -49,11 +45,13 @@
     "chai": "3.x",
     "chai-as-promised": "^7.1.1",
     "clean-css-cli": "^4.3.0",
+    "concurrently": "^3.6.0",
     "crx": "^3.2.1",
     "decompress-zip": "^0.3.2",
     "gift": "^0.10.1",
     "github": "12.x",
     "grunt": "^1.0.4",
+    "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-cssmin": "^3.0.0",
     "grunt-contrib-uglify": "^4.0.1",
@@ -62,12 +60,15 @@
     "hammerjs": "^2.0.8",
     "hogan": "^1.0.2",
     "hogan.js": "^3.0.2",
+    "http-server": "github:danielweck/http-server#master",
     "httpreq": "^0.4.24",
     "jath": "github:danielweck/jath#master",
     "jquery-hammerjs": "^2.0.0",
     "keymaster": "github:danielweck/keymaster#master",
     "mathjax-single-file": "github:danielweck/MathJax-single-file#master",
     "mocha": "^5.2.0",
+    "npm-run-all": "^4.1.5",
+    "opener": "^1.5.1",
     "phantomjs-prebuilt": "^2.1.16",
     "remotestoragejs": "^1.2.2",
     "requirejs-hogan-plugin": "^0.3.1",
@@ -75,11 +76,7 @@
     "spin.js": "2.x",
     "uglify-js": "^3.6.0",
     "wd": "^1.11.4",
-    "xml2js": "^0.4.22",
-    "concurrently": "^3.6.0",
-    "http-server": "github:danielweck/http-server#master",
-    "npm-run-all": "^4.1.5",
-    "opener": "^1.5.1"
+    "xml2js": "^0.4.22"
   },
   "scripts": {
     "cson2json": "node ./readium-js/readium-shared-js/readium-build-tools/concat.js \"package/*.cson\" package.cson && node ./readium-js/readium-shared-js/node_modules/cson/bin/cson2json package.cson > package.json && node ./readium-js/readium-shared-js/node_modules/rimraf/bin.js package.cson && node readium-js/readium-shared-js/readium-build-tools/optimizePackageJsonScripts.js",

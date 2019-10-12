@@ -9,15 +9,36 @@
 </head>
 
 <!-- This is all application-specific HTML -->
-<body>
-<div id="app-container">
-    <div id="reading-area" role="main">
-        <div id="epub-reader-container">
-            <div id="epub-reader-frame">
-            </div>
-        </div>
-    </div>
+<body style="height: 100%">
+<div style="color: black">
+    <button id="prev-button">previous</button>
+    <button id="next-button">next</button>
+    <button id="bookmark">bookmark</button>
+    Font Sizing
+    <input type="range" id="font_size" min="0" max="10">
+    Page Width
+    <input type="range" id="page_width" min="0" max="10">
+    <select id="theme_list"></select>
+    <select id="scrolling_mode"></select>
+    <select id="display_format"></select>
 </div>
+<table style="width:100%; height:100%">
+    <tr>
+        <td width="20%">
+            <div class="customTOC"></div>
+        </td>
+        <td width="80%" style="position: relative">
+            <div id="app-container">
+                <div id="reading-area" role="main">
+                    <div id="epub-reader-container">
+                        <div id="epub-reader-frame">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
 
 
 <script type="text/javascript">
