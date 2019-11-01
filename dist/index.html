@@ -76,6 +76,8 @@
             TreineticEpubReader.open("../epub_content/epub_1.epub");
         },1000);
 
+        window.ext = exControls;
+
         function registerAllUIEvents(etc) {
             $("#next-button").on("click", function () {
                 if (etc.hasNextPage()) {
@@ -105,7 +107,7 @@
             });
 
             $("#scrolling_mode").on("change", function () {
-                etc.setScrollMode($(this).val());
+                etc.setScrollOption($(this).val());
             });
 
             $("#display_format").on("change", function () {
@@ -175,7 +177,7 @@
         }
 
         function navgigateToPage(href) {
-            goToPage(href)
+            window.ext.goToPage(href)
         }
     }
 
