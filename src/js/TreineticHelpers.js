@@ -5,7 +5,7 @@ define([],function () {
             $("html").attr("data-theme", readerSettings.theme);
             var bookStyles = getBookStyles(readerSettings.theme);
             reader.setBookStyles(bookStyles);
-            $('#reading-area').css(bookStyles[0].declarations);
+            $('.tr-epub-reader-element').css(bookStyles[0].declarations);
         }
         Settings.put('reader', readerSettings);
     }

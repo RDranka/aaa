@@ -39,25 +39,35 @@ define([
     var gesturesHandler = null;
     var currentPackageDocument;
     var wasFixed;
+    var embeded = true;
 
 
-
-
-
-    function init(data) {
+    function init(element) {
         setUserKeyboardPreferences();
         Keyboard.scope('reader');
-        ebookURL_filepath = getEpubURLFilePath(data.epub);
+
         unsubscribeFromReaderEvents();
-        setTimeout(function () {
-            initReader("#epub-reader-frame", data);
-        }, 0);
+        initReader(element);
         return ExternalControls.getInstance();
     }
 
-    function initReader(reader_frame_element, data) {
+    function open(epubUrlOrFolder) {
         var settings = setReaderPreferences();
+        ebookURL_filepath = getEpubURLFilePath(epubUrlOrFolder);
+        var openPageRequest = getOpenPageRequest(settings, ebookURL_filepath);
+        var urlParams = Helpers.getURLQueryParams();
+        var goto = urlParams['goto'];
+        openPageRequest = goto ? getPageUrlWithSavedParams(goto) : openPageRequest;
+        var readerSettings = {syntheticSpread: "auto", scroll: "auto"};
+        if (embeded) {
+            readerSettings = settings.reader || SettingsDialog.defaultSettings;
+        }
+        loadEpub(readerSettings, epubUrlOrFolder, openPageRequest);
+    }
 
+    function initReader(reader_frame_element) {
+        var settings = setReaderPreferences();
+        $(reader_frame_element).addClass('tr-epub-reader-element');
         var readerOptions = {
             el: reader_frame_element,
             annotationCSSUrl: moduleConfig.annotationCSSUrl,
@@ -74,23 +84,17 @@ define([
             readiumOptions.useSimpleLoader = true;
         }
 
-        var openPageRequest = getOpenPageRequest(settings, ebookURL_filepath);
-        var urlParams = Helpers.getURLQueryParams();
-        var goto = urlParams['goto'];
-        openPageRequest = goto ? getPageUrlWithSavedParams(goto) : openPageRequest;
+
         readium = new Readium(readiumOptions, readerOptions);
         window.READIUM = readium;
         loadPluginsWithReadiumSDK(readerOptions);
-        setupKeyEvents(data, $(reader_frame_element));
-
+        setupKeyEvents(true, $(reader_frame_element));
         var readerSettings = {syntheticSpread: "auto", scroll: "auto"};
-        if (!data.embedded) {
+        if (embeded) {
             readerSettings = settings.reader || SettingsDialog.defaultSettings;
         }
         handleReaderEvents();
         TreineticHelpers.updateReader(readium.reader, readerSettings);
-        loadEpub(readerSettings, data.epub, openPageRequest);
-
     }
 
     var loadEpub = function (readerSettings, ebookURL, openPageRequest) {
@@ -145,7 +149,7 @@ define([
         });
     };
 
-    var setupKeyEvents = function (data, $element) {
+    var setupKeyEvents = function (embedded, $element) {
         readium.reader.addIFrameEventListener('keydown', function (e) {
             Keyboard.dispatch(document.documentElement, e.originalEvent);
         });
@@ -162,7 +166,7 @@ define([
 
         });
         Keyboard.on(Keyboard.NightTheme, 'reader', function () {
-            if (!data.embedded) {
+            if (embedded) {
                 Settings.get('reader', function (json) {
                     json = !json ? {} : json;
                     var isNight = json.theme === "night-theme";
@@ -193,10 +197,10 @@ define([
 
         var setTocSize = function () {
             var height = ExternalControls.getInstance().getReaderHeight();
-            if(height){
+            if (height) {
                 $element.height(height);
-            }else{
-                if($element.length > 0){
+            } else {
+                if ($element.length > 0) {
                     var appHeight = $(document.body).height() - $element[0].offsetTop;
                     $element.height(appHeight);
                 }
@@ -511,8 +515,12 @@ define([
 
 
     return {
-        loadUI: init,
-        create :
+        create: init,
+        open: open,
+        loadUI: function (data) {
+            init("#epub-reader-frame");
+            open(data.epub);
+        },
         handler: function () {
             return ExternalControls.getInstance();
         },

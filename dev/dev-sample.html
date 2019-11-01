@@ -71,14 +71,21 @@
                         });
                         var config = TreineticEpubReader.config();
                         config.jsLibRoot = "../build-output/";
-                        TreineticEpubReader.loadUI({epub: "../epub/robinhood.epub"});
+                        TreineticEpubReader.create("#epub-reader-frame");
+                        //TreineticEpubReader.loadUI({epub: "../epub/robinhood.epub"});
                         registerAllUIEvents(exControls);
 
 
+                        setTimeout(function () {
+                            TreineticEpubReader.open("../epub/robinhood.epub");
+                        },1000);
 
 
+                        setTimeout(function () {
+                            TreineticEpubReader.open("../epub/extracted_epub");
+                        },5000);
 
-
+                        window.ext = exControls;
 
                     });
             });
@@ -113,7 +120,7 @@
             });
 
             $("#scrolling_mode").on("change", function () {
-                etc.setScrollMode($(this).val());
+                etc.setScrollOption($(this).val());
             });
 
             $("#display_format").on("change", function () {
@@ -183,7 +190,7 @@
         }
 
         function navgigateToPage(href) {
-            goToPage(href)
+            window.ext.goToPage(href)
         }
 
 
@@ -211,7 +218,7 @@
         <td width="20%">
             <div class="customTOC"></div>
         </td>
-        <td width="80%" style="position: relative">
+        <td width="80%" style="position: relative; vertical-align: top">
 <!--            <div id="app-container">-->
 <!--                <div id="reading-area" role="main">-->
 <!--                    <div id="epub-reader-container">-->
@@ -222,6 +229,7 @@
 
             <div id="epub-reader-frame">
             </div>
+
         </td>
     </tr>
 </table>
