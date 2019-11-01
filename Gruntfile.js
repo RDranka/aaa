@@ -53,7 +53,7 @@ module.exports = function (grunt) {
                         cwd: 'epub_content',
                         expand: true,
                         src: ['accessible_epub_3/**',],
-                        dest: './dist/epub_content'
+                        dest: './dist/epub_content/accessible_epub_3'
                     },
                     {
                         cwd: 'epub_content',

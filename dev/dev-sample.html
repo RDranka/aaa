@@ -71,8 +71,14 @@
                         });
                         var config = TreineticEpubReader.config();
                         config.jsLibRoot = "../build-output/";
-                        TreineticEpubReader.loadUI({epub: "../epub_content/robinhood.epub"});
+                        TreineticEpubReader.loadUI({epub: "../epub/robinhood.epub"});
                         registerAllUIEvents(exControls);
+
+
+
+
+
+
 
                     });
             });
@@ -206,13 +212,15 @@
             <div class="customTOC"></div>
         </td>
         <td width="80%" style="position: relative">
-            <div id="app-container">
-                <div id="reading-area" role="main">
-                    <div id="epub-reader-container">
-                        <div id="epub-reader-frame">
-                        </div>
-                    </div>
-                </div>
+<!--            <div id="app-container">-->
+<!--                <div id="reading-area" role="main">-->
+<!--                    <div id="epub-reader-container">-->
+<!--                       -->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+            <div id="epub-reader-frame">
             </div>
         </td>
     </tr>

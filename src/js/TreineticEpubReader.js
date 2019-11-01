@@ -41,6 +41,9 @@ define([
     var wasFixed;
 
 
+
+
+
     function init(data) {
         setUserKeyboardPreferences();
         Keyboard.scope('reader');
@@ -78,7 +81,7 @@ define([
         readium = new Readium(readiumOptions, readerOptions);
         window.READIUM = readium;
         loadPluginsWithReadiumSDK(readerOptions);
-        setupKeyEvents(data);
+        setupKeyEvents(data, $(reader_frame_element));
 
         var readerSettings = {syntheticSpread: "auto", scroll: "auto"};
         if (!data.embedded) {
@@ -93,7 +96,6 @@ define([
     var loadEpub = function (readerSettings, ebookURL, openPageRequest) {
         readium.openPackageDocument(ebookURL, function (packageDocument, options) {
             if (!packageDocument) {
-                console.error("ERROR OPENING EBOOK: " + ebookURL_filepath);
                 spin(false);
                 ExternalControls.getInstance().epubFailed("epubfailed");
                 return;
@@ -143,7 +145,7 @@ define([
         });
     };
 
-    var setupKeyEvents = function (data) {
+    var setupKeyEvents = function (data, $element) {
         readium.reader.addIFrameEventListener('keydown', function (e) {
             Keyboard.dispatch(document.documentElement, e.originalEvent);
         });
@@ -153,12 +155,11 @@ define([
         });
 
         readium.reader.addIFrameEventListener('focus', function (e) {
-            $('#reading-area').addClass("contentFocus");
             $(window).trigger("focus");
         });
 
         readium.reader.addIFrameEventListener('blur', function (e) {
-            $('#reading-area').removeClass("contentFocus");
+
         });
         Keyboard.on(Keyboard.NightTheme, 'reader', function () {
             if (!data.embedded) {
@@ -193,11 +194,11 @@ define([
         var setTocSize = function () {
             var height = ExternalControls.getInstance().getReaderHeight();
             if(height){
-                $('#app-container').height(height);
+                $element.height(height);
             }else{
-                if($('#app-container').length > 0){
-                    var appHeight = $(document.body).height() - $('#app-container')[0].offsetTop;
-                    $('#app-container').height(appHeight);
+                if($element.length > 0){
+                    var appHeight = $(document.body).height() - $element[0].offsetTop;
+                    $element.height(appHeight);
                 }
             }
         };
@@ -511,6 +512,7 @@ define([
 
     return {
         loadUI: init,
+        create :
         handler: function () {
             return ExternalControls.getInstance();
         },
