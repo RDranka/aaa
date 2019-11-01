@@ -135,6 +135,10 @@ define([
             setScaleDisplay(); //TODO find what this is
         });
 
+        function setScaleDisplay(){
+
+        }
+
         readium.reader.on(ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED, function ($iframe, spineItem) {
 
         });

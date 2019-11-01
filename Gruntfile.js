@@ -52,13 +52,13 @@ module.exports = function (grunt) {
                     {
                         cwd: 'epub_content',
                         expand: true,
-                        src: ['accessible_epub_3/**',],
-                        dest: './dist/epub_content/accessible_epub_3'
+                        src: ['epub_2/**',],
+                        dest: './dist/epub_content/epub_2'
                     },
                     {
                         cwd: 'epub_content',
                         expand: true,
-                        src: ['epubReadingSystem.epub'],
+                        src: ['epub_1.epub'],
                         dest: './dist/epub_content/'
                     },
                     {

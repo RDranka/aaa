@@ -72,18 +72,16 @@
                         var config = TreineticEpubReader.config();
                         config.jsLibRoot = "../build-output/";
                         TreineticEpubReader.create("#epub-reader-frame");
-                        //TreineticEpubReader.loadUI({epub: "../epub/robinhood.epub"});
+                        //TreineticEpubReader.loadUI({epub: "../epub/epub_1.epub"});
                         registerAllUIEvents(exControls);
 
 
                         setTimeout(function () {
-                            TreineticEpubReader.open("../epub/robinhood.epub");
+                            TreineticEpubReader.open("../epub_content/epub_1.epub");
                         },1000);
 
 
-                        setTimeout(function () {
-                            TreineticEpubReader.open("../epub/extracted_epub");
-                        },5000);
+
 
                         window.ext = exControls;
 
