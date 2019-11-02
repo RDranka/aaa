@@ -2,12 +2,19 @@
 
 Treinetic-epub-reader is a fork of popular [readium-js-viewer](https://raw.githubusercontent.com/readium/readium-js-viewer) but customized and simplified the usage of the library 
 
+<img src="https://drive.google.com/uc?export=view&id=1kl3sKt0mxyjm_2YAmAV4PXaHT2XhAnBq" width="100%" />
+
 ## Usage
 
-1. `npm install @treinetic/treinetic-epub-reader`
-2. refer `css` and `js` lib in your html, note that jquery is a dependency for the library 
+1. Install the library
 
-```
+    ```bash 
+        npm install @treinetic/treinetic-epub-reader --save
+    ```
+    
+2. refer `css` and `js` lib in your html ( jquery is a must )
+
+```html
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <link rel="stylesheet" type="text/css" href="../node_modules/@treinetic/treinetic-epub-reader/dist/TreineticEpubReader.min.css">
 <script type="text/javascript" src="../node_modules/@treinetic/treinetic-epub-reader/dist/TreineticEpubReader.min.js"></script>
@@ -15,19 +22,13 @@ Treinetic-epub-reader is a fork of popular [readium-js-viewer](https://raw.githu
 
 3. create placeholder divs for the reader.
 
-```
-<div id="app-container">
-    <div id="reading-area" role="main">
-        <div id="epub-reader-container">
-            <div id="epub-reader-frame">
-            </div>
-        </div>
-    </div>
-</div>
+```html
+<div id="epub-reader-frame"></div>
 ```
 
 4. Javascript 
-```
+```JavaScript
+
 //Register the reader events and get reader controller object ( note that these are just callbacks you can't treat them as events though )
 
 var exControls = TreineticEpubReader.handler();
@@ -71,11 +72,11 @@ exControls.registerEvent("onTOCLoaded", function (hasTOC) {
 // and set the root folder path of those files to 'jsLibRoot'  
 var config = TreineticEpubReader.config();
 config.jsLibRoot = "src/ZIPJS/";
-        
-TreineticEpubReader.loadUI({epub: "src/epub_content/robinhood.epub"});
 
+TreineticEpubReader.create("#epub-reader-frame");
+TreineticEpubReader.open("assets/epub/epub_1.epub");
 
-For more sample code please check "index.html" inside the dist folder
+To see a code sample open `sample` folder inside the `dist`
 ```
 
 ## License
