@@ -27,7 +27,7 @@ Treinetic-epub-reader is a fork of popular [readium-js-viewer](https://raw.githu
 ```
 
 4. Javascript 
-```JavaScript
+```javascript
 
 //Register the reader events and get reader controller object ( note that these are just callbacks you can't treat them as events though )
 
