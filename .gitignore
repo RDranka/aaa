@@ -13,4 +13,6 @@ http_ebooks.log
 http_app.log
 http_app-ebooks.log
 dev/grunt_build/node_modules
+dev/grunt_build/js/TreineticEpubReader.js
+dev/grunt_build/css/TreineticEpubReader.css
 
