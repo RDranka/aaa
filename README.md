@@ -1,16 +1,16 @@
 # Treinetic-epub-reader
 
-Treinetic-epub-reader is a fork of popular [readium-js-viewer](https://raw.githubusercontent.com/readium/readium-js-viewer) but customized and simplified the usage of the library 
+Treinetic-epub-reader is a fork of popular [readium-js-viewer](https://raw.githubusercontent.com/readium/readium-js-viewer) but customized and simplified the usage of the library. This project is an initiative of Treinetic (Pvt) Ltd, Sri Lanka. Contact us via www.treinetic.com and get your software product done by the experts.
 
-<img src="https://drive.google.com/uc?export=view&id=1kl3sKt0mxyjm_2YAmAV4PXaHT2XhAnBq" width="100%" />
+<img src="https://drive.google.com/uc?export=view&id=1uuTSkMEc_wAPOSsumnWWC50YGD-2e81n" width="100%" />
 
 ## Usage
 
 1. Install the library
 
-    ```bash 
-        npm install @treinetic/treinetic-epub-reader --save
-    ```
+```bash 
+npm install @treinetic/treinetic-epub-reader --save
+```
     
 2. refer `css` and `js` lib in your html ( jquery is a must )
 
@@ -134,7 +134,7 @@ Or to use optimized Javascript bundles (single or multiple):
 
 And finally to update the distribution package.
 
-* `npm run dist` 
+* `npm run tr_build` 
 
 Also note that the built-in local HTTP server functionality (`npm run http`) is primarily designed to serve the Readium application at development time in its "exploded" form (`dev`, `src`, `node_modules`, etc. folders). It is also possible to use any arbitrary HTTP server as long as the root folder is `readium-js-viewer` (so that the application assets ; CSS, images, fonts ; can be loaded relative to this base URL). Example with the built-in NodeJS server: `node node_modules/http-server/bin/http-server -a 127.0.0.1 -p 8080 -c-1 .`. Also note that the `127.0.0.1` IP address which is used by default when invoking the `npm run http` command can be set to `0.0.0.0` in order to automatically bind the HTTP server to the local LAN IP, making it possible to open the Readium app in a web browser from another machine on the network. Simply set the `RJS_HTTP_IP` environment variable to `0.0.0.0` (e.g. using `export RJS_HTTP_IP="0.0.0.0"` from the command line), or for a less permanent setting: `RJS_HTTP_IP="0.0.0.0" npm run http` (the environment variable only "lasts" for the lifespan of the NPM command).
 
