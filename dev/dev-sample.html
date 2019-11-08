@@ -39,8 +39,6 @@
             src="../readium-js/readium-shared-js/build-config/RequireJS_config_plugins.js"></script>
 
 
-    <script type="text/javascript" src="../src/fonts/fonts.js"></script>
-
     <script type="text/javascript" src="./RequireJS_config.js"></script>
     <script type="text/javascript" src="../src/js/mobile_commands/Mobile_commands.js"></script>
 
@@ -59,6 +57,10 @@
                             console.log("EpubLoad Failed");
                         });
 
+                        exControls.registerEvent("onReaderHeightRequest", () => {
+                            return 600;
+                        });
+
                         exControls.registerEvent("onTOCLoaded", function (hasTOC) {
                             var message = {
                                 hasTOC: hasTOC,
@@ -71,13 +73,14 @@
                         });
                         var config = TreineticEpubReader.config();
                         config.jsLibRoot = "../build-output/";
+                        config.loader = "one";
                         TreineticEpubReader.create("#epub-reader-frame");
                         //TreineticEpubReader.loadUI({epub: "../epub/epub_1.epub"});
                         registerAllUIEvents(exControls);
 
 
                         setTimeout(function () {
-                            TreineticEpubReader.open("../epub_content/epub_1.epub");
+                            TreineticEpubReader.open("../epub_content/epub_2");
                         },1000);
 
 

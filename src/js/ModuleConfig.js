@@ -25,7 +25,9 @@ define(['module'], function(module) {
             //Fonts is a list of font objects. 
             'fonts': config.fonts || [],
 
-            'useSimpleLoader': config.useSimpleLoader || false
+            'useSimpleLoader': config.useSimpleLoader || false,
+
+            'loader' : config.loaderType || null
 
         };
 });

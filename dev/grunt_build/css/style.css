@@ -241,4 +241,8 @@ body {
 }
 
 
+.spinner-holder svg path, svg rect{
+    fill: #71be68;
+}
+
 

@@ -40,7 +40,7 @@ define([
     var currentPackageDocument;
     var wasFixed;
     var embeded = true;
-
+    var customSpinner = null;
 
     function init(element) {
         setUserKeyboardPreferences();
@@ -80,10 +80,11 @@ define([
             openBookOptions: {}
         };
 
+        customSpinner = spinner.createSpinner(moduleConfig.loader);
+
         if (moduleConfig.useSimpleLoader) {
             readiumOptions.useSimpleLoader = true;
         }
-
 
         readium = new Readium(readiumOptions, readerOptions);
         window.READIUM = readium;
@@ -135,12 +136,12 @@ define([
             setScaleDisplay(); //TODO find what this is
         });
 
-        function setScaleDisplay(){
+        function setScaleDisplay() {
 
         }
 
         readium.reader.on(ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED, function ($iframe, spineItem) {
-
+            spin(false);
         });
 
         readium.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, function (pageChangeData) {
@@ -265,7 +266,6 @@ define([
     };
 
     var getPageUrlWithSavedParams = function (goto) {
-        console.log("Goto override? " + goto);
         try {
             var gotoObj;
             var openPageRequest_ = undefined;
@@ -309,10 +309,10 @@ define([
 
             if (openPageRequest_) {
                 return openPageRequest_;
-                console.debug("Open request (goto): " + JSON.stringify(openPageRequest));
+                Readerlog("Open request (goto): " + JSON.stringify(openPageRequest));
             }
         } catch (err) {
-            console.error(err);
+            Readerlog(err);
         }
         return null;
     };
@@ -439,8 +439,8 @@ define([
             ) : undefined;
 
         if (appUrl) {
-            console.log("EPUB URL absolute: " + ebookURL);
-            console.log("App URL: " + appUrl);
+            Readerlog("EPUB URL absolute: " + ebookURL);
+            Readerlog("App URL: " + appUrl);
 
             ebookURL = ebookURL.replace(CORS_PROXY_HTTP_TOKEN, CORS_PROXY_HTTP_TOKEN_ESCAPED);
             ebookURL = ebookURL.replace(CORS_PROXY_HTTPS_TOKEN, CORS_PROXY_HTTPS_TOKEN_ESCAPED);
@@ -451,7 +451,7 @@ define([
             }
 
             ebookURL = ebookURL.replace(regex_CORS_PROXY_HTTPs_TOKEN_ESCAPED, "/$1://");
-            console.log("EPUB URL relative to app: " + ebookURL);
+            Readerlog("EPUB URL relative to app: " + ebookURL);
         }
 
         return ebookURL;
@@ -485,38 +485,34 @@ define([
     //TODO SET THE SPINNER IN A WAY THAT IT CAN BE CHANGED DYANMICALLY
     var spin = function (on) {
         if (on) {
-            //console.error("do SPIN: -- WILL: " + spinner.willSpin + " IS:" + spinner.isSpinning + " STOP REQ:" + spinner.stopRequested);
-            if (spinner.willSpin || spinner.isSpinning) return;
-
-            spinner.willSpin = true;
+            if (customSpinner.willSpin || customSpinner.isSpinning) return;
+            customSpinner.willSpin = true;
 
             setTimeout(function () {
-                if (spinner.stopRequested) {
-                    //console.debug("STOP REQUEST: -- WILL: " + spinner.willSpin + " IS:" + spinner.isSpinning + " STOP REQ:" + spinner.stopRequested);
-                    spinner.willSpin = false;
-                    spinner.stopRequested = false;
+                if (customSpinner.stopRequested) {
+                    customSpinner.willSpin = false;
+                    customSpinner.stopRequested = false;
                     return;
                 }
-                //console.debug("SPIN: -- WILL: " + spinner.willSpin + " IS:" + spinner.isSpinning + " STOP REQ:" + spinner.stopRequested);
-                spinner.isSpinning = true;
-                spinner.spin($('#reading-area')[0]);
-
-                spinner.willSpin = false;
+                customSpinner.isSpinning = true;
+                customSpinner.spin($('.tr-epub-reader-element')[0]);
+                customSpinner.willSpin = false;
 
             }, 100);
         } else {
 
-            if (spinner.isSpinning) {
-//console.debug("!! SPIN: -- WILL: " + spinner.willSpin + " IS:" + spinner.isSpinning + " STOP REQ:" + spinner.stopRequested);
-                spinner.stop();
-                spinner.isSpinning = false;
-            } else if (spinner.willSpin) {
-//console.debug("!! SPIN REQ: -- WILL: " + spinner.willSpin + " IS:" + spinner.isSpinning + " STOP REQ:" + spinner.stopRequested);
-                spinner.stopRequested = true;
+            if (customSpinner.isSpinning) {
+                customSpinner.stop();
+                customSpinner.isSpinning = false;
+            } else if (customSpinner.willSpin) {
+                customSpinner.stopRequested = true;
             }
         }
     };
 
+    function Readerlog(obj) {
+        console.log(obj);
+    }
 
     return {
         create: init,

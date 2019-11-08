@@ -15,13 +15,11 @@
             --skip-rebase
             --skip-advanced
             --level 0
-            "node_modules/bootstrap/dist/css/bootstrap.css"
-            "node_modules/bootstrap-accessibility-plugin/plugins/css/bootstrap-accessibility.css"
             "src/css/sourcesanspro.css"
             "src/css/readium_js.css"
             "src/css/viewer.css"
             "src/css/viewer_audio.css"
-            "src/css/settings.css"
+            "src/css/Tr_style.css"
     '
     
 #=====================

@@ -33201,7 +33201,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
     } catch(err) {
         console.error(err);
     }
-    
+
     $.extend(this, new EventEmitter());
 
     var SCROLL_MARGIN_TO_SHOW_LAST_VISBLE_LINE = 5;
@@ -33654,7 +33654,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
 
     this.restoreCurrentPosition = function() {
         if (_currentPageRequest) {
-            this.openPageInternal(_currentPageRequest);            
+            this.openPageInternal(_currentPageRequest);
         }
     };
 
@@ -33671,7 +33671,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
     };
 
     function createPageViewForSpineItem(aSpineItem, isTemporaryView) {
-        
+
         options.disablePageTransitions = true; // force
 
         var enableBookStyleOverrides = true;
@@ -33686,7 +33686,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
             reader);
 
         pageView.on(OnePageView.Events.SPINE_ITEM_OPEN_START, function($iframe, spineItem) {
-            
+
             Globals.logEvent("OnePageView.Events.SPINE_ITEM_OPEN_START", "ON", "scroll_view.js [ " + spineItem.href + " ]");
 
             Globals.logEvent("CONTENT_DOCUMENT_LOAD_START", "EMIT", "scroll_view.js [ " + spineItem.href + " ]");
@@ -33705,7 +33705,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
             onPaginationChanged(self);
             updateTransientViews();
             if (_currentPageRequest && !_deferredPageRequest) {
-                self.restoreCurrentPosition();                
+                self.restoreCurrentPosition();
             }
         }
         var updatePageViewSizeAndPagination = _.debounce(updatePageViewSizeAndPagination_, 100);
@@ -33714,7 +33714,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
         // is notified when the size of the content of the view changes, because
         // the font or the viewport size has changed
         pageView.on(OnePageView.Events.CONTENT_SIZE_CHANGED, function($iframe, spineItem) {
-            
+
             Globals.logEvent("OnePageView.Events.CONTENT_SIZE_CHANGED", "ON", "scroll_view.js [ " + spineItem.href + " ]");
             updatePageViewSizeAndPagination();
         });
@@ -33982,12 +33982,12 @@ var ScrollView = function (options, isContinuousScroll, reader) {
             pageRange = getPageViewRange(pageView);
             sfiNav = pageView.getNavigator();
 
-            var domRange = sfiNav.getDomRangeFromRangeCfi(pageRequest.elementCfi);            
+            var domRange = sfiNav.getDomRangeFromRangeCfi(pageRequest.elementCfi);
             if (!domRange) {
                 console.warn("Range for cfi=" + pageRequest.elementCfi + " not found!");
                 return;
             }
-            
+
             var domRangeAsRange = getDomRangeAsRange(pageView, domRange);
             if (isRangeIsVisibleOnScreen(domRangeAsRange, 60)) {
                 //TODO refactoring required
@@ -34042,7 +34042,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
     }
 
     function onPaginationChanged(initiator, paginationRequest_spineItem, paginationRequest_elementId) {
-        
+
         Globals.logEvent("InternalEvents.CURRENT_VIEW_PAGINATION_CHANGED", "EMIT", "scroll_view.js");
         self.emit(Globals.InternalEvents.CURRENT_VIEW_PAGINATION_CHANGED, {
             paginationInfo: self.getPaginationInfo(),
@@ -34140,7 +34140,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
 
         var el = pageView.element();
         var pos = el.position();
-        
+
         if (_jQueryPositionNeedsFix) {
             var offsetParent = el.offsetParent();
             pos.top -= offsetParent.scrollTop();
@@ -34190,7 +34190,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
     };
 
     this.bookmarkCurrentPage = function () {
-        
+
         return self.getFirstVisibleCfi();
     };
 
@@ -34406,7 +34406,7 @@ var ScrollView = function (options, isContinuousScroll, reader) {
 
         return elementRange;
     }
-    
+
     function getDomRangeAsRange(pageView, domRange) {
 
         var pageRange = getPageViewRange(pageView);
@@ -34501,11 +34501,11 @@ var ScrollView = function (options, isContinuousScroll, reader) {
             return pageView.isVisibleSpineItemElementCfi(spineIdRef, partialCfi);
         }
     };
-    
+
     function getFirstOrLastVisibleCfi(pickerFunc) {
         var pageViews = getVisiblePageViews();
         var selectedPageView = pickerFunc(pageViews);
-        var pageViewTopOffset =selectedPageView.element().position().top;
+        var pageViewTopOffset = selectedPageView ? selectedPageView.element().position().top : 0;
         var visibleContentOffsets, frameDimensions;
 
         visibleContentOffsets = {
@@ -34513,32 +34513,32 @@ var ScrollView = function (options, isContinuousScroll, reader) {
             left: 0
         };
 
-        var height = Math.min(selectedPageView.element().height(), viewHeight());
+        var height = Math.min(selectedPageView ? selectedPageView.element().height() : 0, viewHeight());
 
         if (pageViewTopOffset >= 0) {
             height = height - pageViewTopOffset;
         }
-        
+
         frameDimensions = {
-            width: selectedPageView.element().width(),
+            width: selectedPageView ?  selectedPageView.element().width() : 0,
             height: height
         };
-        
+
         var cfiFunctions = [
             selectedPageView.getFirstVisibleCfi,
             selectedPageView.getLastVisibleCfi
         ];
-        
+
         return pickerFunc(cfiFunctions)(visibleContentOffsets, frameDimensions);
     }
-    
+
     this.getFirstVisibleCfi = function () {
-        
+
         return getFirstOrLastVisibleCfi(_.first);
     };
 
     this.getLastVisibleCfi = function () {
-        
+
         return getFirstOrLastVisibleCfi(_.last);
     };
 
@@ -43313,7 +43313,7 @@ define('text',['module'], function (module) {
 });
 
 
-define('text!version.json',[],function () { return '{"readiumJsViewer":{"sha":"b9d5be8da17ef2bff3f0f69a622297fde39b485d","clean":false,"version":"1.2.0","chromeVersion":"2.2.0","tag":"v1.2.0-1-gb9d5be8","branch":"v2.1.0","release":false,"timestamp":1572689323321},"readiumJs":{"sha":"5400ba0dd2c82cab58a25362d6c223f7b6239343","clean":true,"version":"0.31.1","tag":"0.31.1-8-g5400ba0","branch":"development","release":false,"timestamp":1572689323479},"readiumSharedJs":{"sha":"3042d11031bd3dd6d1c154606c0217e02d7f9280","clean":true,"version":"0.31.1","tag":"0.31.1-10-g3042d11","branch":"development","release":false,"timestamp":1572689323650}}';});
+define('text!version.json',[],function () { return '{"readiumJsViewer":{"sha":"2c011d8c61a05db7bf0ce2a060a92ccad710ba97","clean":false,"version":"1.3.2","chromeVersion":"2.3.2","tag":"v2.1.0-3-g2c011d8","branch":"custom-loader","release":false,"timestamp":1573233468993},"readiumJs":{"sha":"5400ba0dd2c82cab58a25362d6c223f7b6239343","clean":false,"version":"0.31.1","tag":"0.31.1-8-g5400ba0","branch":"development","release":false,"timestamp":1573233469196},"readiumSharedJs":{"sha":"3042d11031bd3dd6d1c154606c0217e02d7f9280","clean":false,"version":"0.31.1","tag":"0.31.1-10-g3042d11","branch":"development","release":false,"timestamp":1573233469377}}';});
 
 //  Copyright (c) 2014 Readium Foundation and/or its licensees. All rights reserved.
 //  
@@ -51217,7 +51217,9 @@ define('readium_js_viewer/ModuleConfig',['module'], function(module) {
             //Fonts is a list of font objects. 
             'fonts': config.fonts || [],
 
-            'useSimpleLoader': config.useSimpleLoader || false
+            'useSimpleLoader': config.useSimpleLoader || false,
+
+            'loader' : config.loaderType || null
 
         };
 });
@@ -51600,27 +51602,224 @@ define('readium_js_viewer/ModuleConfig',['module'], function(module) {
 
 }));
 
-define('readium_js_viewer/Spinner',['spin'], function(Spinner){
+define('readium_js_viewer/Spinner',['spin'], function (Spinner) {
     var opts = {
-      lines: 17, // The number of lines to draw
-      length: 0, // The length of each line
-      width: 10, // The line thickness
-      radius: 48, // The radius of the inner circle
-      corners: 1, // Corner roundness (0..1)
-      rotate: 0, // The rotation offset
-      direction: 1, // 1: clockwise, -1: counterclockwise
-      color: '#000', // #rgb or #rrggbb or array of colors
-      speed: 1, // Rounds per second
-      trail: 66, // Afterglow percentage
-      shadow: false, // Whether to render a shadow
-      hwaccel: false, // Whether to use hardware acceleration
-      className: 'spinner', // The CSS class to assign to the spinner
-      zIndex: 2e9, // The z-index (defaults to 2000000000)
-      top: '50%', // Top position relative to parent in px
-      left: '50%' // Left position relative to parent in px
+        lines: 17, // The number of lines to draw
+        length: 0, // The length of each line
+        width: 10, // The line thickness
+        radius: 48, // The radius of the inner circle
+        corners: 1, // Corner roundness (0..1)
+        rotate: 0, // The rotation offset
+        direction: 1, // 1: clockwise, -1: counterclockwise
+        color: '#000', // #rgb or #rrggbb or array of colors
+        speed: 1, // Rounds per second
+        trail: 66, // Afterglow percentage
+        shadow: false, // Whether to render a shadow
+        hwaccel: false, // Whether to use hardware acceleration
+        className: 'spinner', // The CSS class to assign to the spinner
+        zIndex: 2e9, // The z-index (defaults to 2000000000)
+        top: '50%', // Top position relative to parent in px
+        left: '50%' // Left position relative to parent in px
     };
-    return new Spinner(opts);
+    //return new Spinner(opts);
+
+
+    var spinner = function (type) {
+        this.type = type;
+    };
+
+    spinner.prototype.spin = function () {
+        var holder = $("#epub-reader-frame .spinner-holder");
+        if (holder.length === 0) {
+            var div = `<div class="spinner-holder" ></div>`;
+            $("#epub-reader-frame").append(div);
+            var spin = getSvgSpinner(this.type);
+            holder = $("#epub-reader-frame .spinner-holder");
+            holder.append($(spin));
+        }
+        holder.show();
+    };
+
+    spinner.prototype.stop = function () {
+        var holder = $("#epub-reader-frame .spinner-holder");
+        if (holder.length > 0) {
+            holder.hide();
+        }
+    };
+
+
+
+    return {
+        createSpinner : function (sptype) {
+            if(sptype){
+                return new spinner(sptype);
+            }
+            return new Spinner(opts);
+        }
+    };
+
+
+    function getSvgSpinner(type) {
+        switch (type) {
+            case 'one' :
+                return `<svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                       width="40px" height="40px" viewBox="0 0 40 40" enable-background="new 0 0 40 40" xml:space="preserve">
+                      <path opacity="0.2" fill="#000" d="M20.201,5.169c-8.254,0-14.946,6.692-14.946,14.946c0,8.255,6.692,14.946,14.946,14.946
+                        s14.946-6.691,14.946-14.946C35.146,11.861,28.455,5.169,20.201,5.169z M20.201,31.749c-6.425,0-11.634-5.208-11.634-11.634
+                        c0-6.425,5.209-11.634,11.634-11.634c6.425,0,11.633,5.209,11.633,11.634C31.834,26.541,26.626,31.749,20.201,31.749z"/>
+                      <path fill="#000" d="M26.013,10.047l1.654-2.866c-2.198-1.272-4.743-2.012-7.466-2.012h0v3.312h0
+                        C22.32,8.481,24.301,9.057,26.013,10.047z">
+                        <animateTransform attributeType="xml"
+                          attributeName="transform"
+                          type="rotate"
+                          from="0 20 20"
+                          to="360 20 20"
+                          dur="0.5s"
+                          repeatCount="indefinite"/>
+                        </path>
+                      </svg>`;
+            case 'two' :
+                return `<svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                         width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                      <path fill="#000" d="M25.251,6.461c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615V6.461z">
+                        <animateTransform attributeType="xml"
+                          attributeName="transform"
+                          type="rotate"
+                          from="0 25 25"
+                          to="360 25 25"
+                          dur="0.6s"
+                          repeatCount="indefinite"/>
+                        </path>
+                      </svg>`;
+            case 'three' :
+                return `<svg version="1.1" id="loader-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     width="40px" height="40px" viewBox="0 0 50 50" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                  <path fill="#000" d="M43.935,25.145c0-10.318-8.364-18.683-18.683-18.683c-10.318,0-18.683,8.365-18.683,18.683h4.068c0-8.071,6.543-14.615,14.615-14.615c8.072,0,14.615,6.543,14.615,14.615H43.935z">
+                    <animateTransform attributeType="xml"
+                      attributeName="transform"
+                      type="rotate"
+                      from="0 25 25"
+                      to="360 25 25"
+                      dur="0.6s"
+                      repeatCount="indefinite"/>
+                    </path>
+                  </svg>`;
+            case 'four' :
+                return `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                         width="24px" height="24px" viewBox="0 0 24 24" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                        <rect x="0" y="0" width="4" height="7" fill="#333">
+                          <animateTransform  attributeType="xml"
+                            attributeName="transform" type="scale"
+                            values="1,1; 1,3; 1,1"
+                            begin="0s" dur="0.6s" repeatCount="indefinite" />       
+                        </rect>
+                    
+                        <rect x="10" y="0" width="4" height="7" fill="#333">
+                          <animateTransform  attributeType="xml"
+                            attributeName="transform" type="scale"
+                            values="1,1; 1,3; 1,1"
+                            begin="0.2s" dur="0.6s" repeatCount="indefinite" />       
+                        </rect>
+                        <rect x="20" y="0" width="4" height="7" fill="#333">
+                          <animateTransform  attributeType="xml"
+                            attributeName="transform" type="scale"
+                            values="1,1; 1,3; 1,1"
+                            begin="0.4s" dur="0.6s" repeatCount="indefinite" />       
+                        </rect>
+                      </svg>`;
+            case 'five' :
+                return `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 width="24px" height="30px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                <rect x="0" y="0" width="4" height="10" fill="#333">
+                  <animateTransform attributeType="xml"
+                    attributeName="transform" type="translate"
+                    values="0 0; 0 20; 0 0"
+                    begin="0" dur="0.6s" repeatCount="indefinite" />
+                </rect>
+                <rect x="10" y="0" width="4" height="10" fill="#333">
+                  <animateTransform attributeType="xml"
+                    attributeName="transform" type="translate"
+                    values="0 0; 0 20; 0 0"
+                    begin="0.2s" dur="0.6s" repeatCount="indefinite" />
+                </rect>
+                <rect x="20" y="0" width="4" height="10" fill="#333">
+                  <animateTransform attributeType="xml"
+                    attributeName="transform" type="translate"
+                    values="0 0; 0 20; 0 0"
+                    begin="0.4s" dur="0.6s" repeatCount="indefinite" />
+                </rect>
+              </svg>`;
+            case 'six' :
+                return `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                     width="24px" height="30px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                    <rect x="0" y="13" width="4" height="5" fill="#333">
+                      <animate attributeName="height" attributeType="XML"
+                        values="5;21;5" 
+                        begin="0s" dur="0.6s" repeatCount="indefinite" />
+                      <animate attributeName="y" attributeType="XML"
+                        values="13; 5; 13"
+                        begin="0s" dur="0.6s" repeatCount="indefinite" />
+                    </rect>
+                    <rect x="10" y="13" width="4" height="5" fill="#333">
+                      <animate attributeName="height" attributeType="XML"
+                        values="5;21;5" 
+                        begin="0.15s" dur="0.6s" repeatCount="indefinite" />
+                      <animate attributeName="y" attributeType="XML"
+                        values="13; 5; 13"
+                        begin="0.15s" dur="0.6s" repeatCount="indefinite" />
+                    </rect>
+                    <rect x="20" y="13" width="4" height="5" fill="#333">
+                      <animate attributeName="height" attributeType="XML"
+                        values="5;21;5" 
+                        begin="0.3s" dur="0.6s" repeatCount="indefinite" />
+                      <animate attributeName="y" attributeType="XML"
+                        values="13; 5; 13"
+                        begin="0.3s" dur="0.6s" repeatCount="indefinite" />
+                    </rect>
+                  </svg>`;
+            case 'seven' :
+                return `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 width="24px" height="30px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                <rect x="0" y="0" width="4" height="20" fill="#333">
+                  <animate attributeName="opacity" attributeType="XML"
+                    values="1; .2; 1" 
+                    begin="0s" dur="0.6s" repeatCount="indefinite" />
+                </rect>
+                <rect x="7" y="0" width="4" height="20" fill="#333">
+                  <animate attributeName="opacity" attributeType="XML"
+                    values="1; .2; 1" 
+                    begin="0.2s" dur="0.6s" repeatCount="indefinite" />
+                </rect>
+                <rect x="14" y="0" width="4" height="20" fill="#333">
+                  <animate attributeName="opacity" attributeType="XML"
+                    values="1; .2; 1" 
+                    begin="0.4s" dur="0.6s" repeatCount="indefinite" />
+                </rect>
+              </svg>`;
+            case 'eight' :
+                return `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                 width="24px" height="30px" viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                <rect x="0" y="10" width="4" height="10" fill="#333" opacity="0.2">
+                  <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="0.6s" repeatCount="indefinite" />
+                  <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0s" dur="0.6s" repeatCount="indefinite" />
+                  <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0s" dur="0.6s" repeatCount="indefinite" />
+                </rect>
+                <rect x="8" y="10" width="4" height="10" fill="#333"  opacity="0.2">
+                  <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.15s" dur="0.6s" repeatCount="indefinite" />
+                  <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.15s" dur="0.6s" repeatCount="indefinite" />
+                  <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.15s" dur="0.6s" repeatCount="indefinite" />
+                </rect>
+                <rect x="16" y="10" width="4" height="10" fill="#333"  opacity="0.2">
+                  <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.3s" dur="0.6s" repeatCount="indefinite" />
+                  <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.3s" dur="0.6s" repeatCount="indefinite" />
+                  <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.3s" dur="0.6s" repeatCount="indefinite" />
+                </rect>
+              </svg>`;
+        }
+    }
+
 });
+
 define('Settings',[],function(){
     
     // localStorage may be disabled due to zero-quota issues (e.g. iPad in private browsing mode)
@@ -57607,7 +57806,7 @@ define('readium_js_viewer/TreineticEpubReader',[
     var currentPackageDocument;
     var wasFixed;
     var embeded = true;
-
+    var customSpinner = null;
 
     function init(element) {
         setUserKeyboardPreferences();
@@ -57647,10 +57846,11 @@ define('readium_js_viewer/TreineticEpubReader',[
             openBookOptions: {}
         };
 
+        customSpinner = spinner.createSpinner(moduleConfig.loader);
+
         if (moduleConfig.useSimpleLoader) {
             readiumOptions.useSimpleLoader = true;
         }
-
 
         readium = new Readium(readiumOptions, readerOptions);
         window.READIUM = readium;
@@ -57702,12 +57902,12 @@ define('readium_js_viewer/TreineticEpubReader',[
             setScaleDisplay(); //TODO find what this is
         });
 
-        function setScaleDisplay(){
+        function setScaleDisplay() {
 
         }
 
         readium.reader.on(ReadiumSDK.Events.CONTENT_DOCUMENT_LOADED, function ($iframe, spineItem) {
-
+            spin(false);
         });
 
         readium.reader.on(ReadiumSDK.Events.PAGINATION_CHANGED, function (pageChangeData) {
@@ -57832,7 +58032,6 @@ define('readium_js_viewer/TreineticEpubReader',[
     };
 
     var getPageUrlWithSavedParams = function (goto) {
-        console.log("Goto override? " + goto);
         try {
             var gotoObj;
             var openPageRequest_ = undefined;
@@ -57876,10 +58075,10 @@ define('readium_js_viewer/TreineticEpubReader',[
 
             if (openPageRequest_) {
                 return openPageRequest_;
-                console.debug("Open request (goto): " + JSON.stringify(openPageRequest));
+                Readerlog("Open request (goto): " + JSON.stringify(openPageRequest));
             }
         } catch (err) {
-            console.error(err);
+            Readerlog(err);
         }
         return null;
     };
@@ -58006,8 +58205,8 @@ define('readium_js_viewer/TreineticEpubReader',[
             ) : undefined;
 
         if (appUrl) {
-            console.log("EPUB URL absolute: " + ebookURL);
-            console.log("App URL: " + appUrl);
+            Readerlog("EPUB URL absolute: " + ebookURL);
+            Readerlog("App URL: " + appUrl);
 
             ebookURL = ebookURL.replace(CORS_PROXY_HTTP_TOKEN, CORS_PROXY_HTTP_TOKEN_ESCAPED);
             ebookURL = ebookURL.replace(CORS_PROXY_HTTPS_TOKEN, CORS_PROXY_HTTPS_TOKEN_ESCAPED);
@@ -58018,7 +58217,7 @@ define('readium_js_viewer/TreineticEpubReader',[
             }
 
             ebookURL = ebookURL.replace(regex_CORS_PROXY_HTTPs_TOKEN_ESCAPED, "/$1://");
-            console.log("EPUB URL relative to app: " + ebookURL);
+            Readerlog("EPUB URL relative to app: " + ebookURL);
         }
 
         return ebookURL;
@@ -58052,38 +58251,34 @@ define('readium_js_viewer/TreineticEpubReader',[
     //TODO SET THE SPINNER IN A WAY THAT IT CAN BE CHANGED DYANMICALLY
     var spin = function (on) {
         if (on) {
-            //console.error("do SPIN: -- WILL: " + spinner.willSpin + " IS:" + spinner.isSpinning + " STOP REQ:" + spinner.stopRequested);
-            if (spinner.willSpin || spinner.isSpinning) return;
-
-            spinner.willSpin = true;
+            if (customSpinner.willSpin || customSpinner.isSpinning) return;
+            customSpinner.willSpin = true;
 
             setTimeout(function () {
-                if (spinner.stopRequested) {
-                    //console.debug("STOP REQUEST: -- WILL: " + spinner.willSpin + " IS:" + spinner.isSpinning + " STOP REQ:" + spinner.stopRequested);
-                    spinner.willSpin = false;
-                    spinner.stopRequested = false;
+                if (customSpinner.stopRequested) {
+                    customSpinner.willSpin = false;
+                    customSpinner.stopRequested = false;
                     return;
                 }
-                //console.debug("SPIN: -- WILL: " + spinner.willSpin + " IS:" + spinner.isSpinning + " STOP REQ:" + spinner.stopRequested);
-                spinner.isSpinning = true;
-                spinner.spin($('#reading-area')[0]);
-
-                spinner.willSpin = false;
+                customSpinner.isSpinning = true;
+                customSpinner.spin($('.tr-epub-reader-element')[0]);
+                customSpinner.willSpin = false;
 
             }, 100);
         } else {
 
-            if (spinner.isSpinning) {
-//console.debug("!! SPIN: -- WILL: " + spinner.willSpin + " IS:" + spinner.isSpinning + " STOP REQ:" + spinner.stopRequested);
-                spinner.stop();
-                spinner.isSpinning = false;
-            } else if (spinner.willSpin) {
-//console.debug("!! SPIN REQ: -- WILL: " + spinner.willSpin + " IS:" + spinner.isSpinning + " STOP REQ:" + spinner.stopRequested);
-                spinner.stopRequested = true;
+            if (customSpinner.isSpinning) {
+                customSpinner.stop();
+                customSpinner.isSpinning = false;
+            } else if (customSpinner.willSpin) {
+                customSpinner.stopRequested = true;
             }
         }
     };
 
+    function Readerlog(obj) {
+        console.log(obj);
+    }
 
     return {
         create: init,

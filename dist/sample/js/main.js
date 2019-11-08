@@ -53,6 +53,7 @@ $(function () {
 
     var config = TreineticEpubReader.config();
     config.jsLibRoot = "assets/workers/";
+    config.loader = "one"
     TreineticEpubReader.create("#epub-reader-frame");
     TreineticEpubReader.open("assets/epub/epub_1.epub");
 
